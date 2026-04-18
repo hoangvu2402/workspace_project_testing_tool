@@ -1,0 +1,62 @@
+2026-04-18 09:47:53 | INFO     | config.config:<module>:14 - Loaded environment variables from E:\doantotnghiep\doan2\.env
+2026-04-18 09:47:53 | INFO     | config.config:validate_config:43 - --- THÔNG TIN CẤU HÌNH HỆ THỐNG ---
+2026-04-18 09:47:53 | INFO     | config.config:validate_config:44 - Target URL: https://www.saucedemo.com
+2026-04-18 09:47:53 | INFO     | config.config:validate_config:45 - Browser: chromium (Headless: False)
+2026-04-18 09:47:54 | INFO     | utils.helpers:read_excel_data:21 - Đang đọc dữ liệu từ file: E:\doantotnghiep\doan2\test_data\login_data.xlsx, sheet: LoginTests
+2026-04-18 09:47:55 | INFO     | utils.helpers:read_excel_data:29 - Đọc thành công 6 dòng dữ liệu.
+2026-04-18 09:47:56 | INFO     | conftest:browser:18 - Khởi động trình duyệt: chromium
+2026-04-18 09:47:57 | INFO     | conftest:page:33 - Khởi tạo Page context mới.
+2026-04-18 09:47:57 | INFO     | test_login:test_login_from_excel:33 - Bắt đầu test case cho user: 'standard_user'
+2026-04-18 09:47:57 | INFO     | pages.base_page:navigate:17 - Điều hướng đến: https://www.saucedemo.com
+2026-04-18 09:47:59 | INFO     | pages.login_page:login:18 - Bắt đầu quy trình đăng nhập với user: standard_user
+2026-04-18 09:47:59 | INFO     | pages.base_page:fill:34 - Nhập 'standard_user' vào trường: Trường Username
+2026-04-18 09:47:59 | INFO     | pages.base_page:fill:34 - Nhập 'secret_sauce' vào trường: Trường Password
+2026-04-18 09:47:59 | INFO     | pages.base_page:click:24 - Click vào phần tử: Nút Đăng nhập
+2026-04-18 09:48:00 | INFO     | test_login:test_login_from_excel:45 - Đăng nhập thành công với user: standard_user
+2026-04-18 09:48:00 | INFO     | conftest:page:33 - Khởi tạo Page context mới.
+2026-04-18 09:48:00 | INFO     | test_login:test_login_from_excel:33 - Bắt đầu test case cho user: 'locked_out_user'
+2026-04-18 09:48:00 | INFO     | pages.base_page:navigate:17 - Điều hướng đến: https://www.saucedemo.com
+2026-04-18 09:48:02 | INFO     | pages.login_page:login:18 - Bắt đầu quy trình đăng nhập với user: locked_out_user
+2026-04-18 09:48:02 | INFO     | pages.base_page:fill:34 - Nhập 'locked_out_user' vào trường: Trường Username
+2026-04-18 09:48:02 | INFO     | pages.base_page:fill:34 - Nhập 'secret_sauce' vào trường: Trường Password
+2026-04-18 09:48:02 | INFO     | pages.base_page:click:24 - Click vào phần tử: Nút Đăng nhập
+2026-04-18 09:48:02 | INFO     | pages.base_page:get_text:44 - Lấy text từ h3[data-test='error']: Epic sadface: Sorry, this user has been locked out.
+2026-04-18 09:48:02 | INFO     | test_login:test_login_from_excel:51 - Đăng nhập thất bại (đúng kỳ vọng) với lỗi: Epic sadface: Sorry, this user has been locked out.
+2026-04-18 09:48:02 | INFO     | conftest:page:33 - Khởi tạo Page context mới.
+2026-04-18 09:48:02 | INFO     | test_login:test_login_from_excel:33 - Bắt đầu test case cho user: 'problem_user'
+2026-04-18 09:48:02 | INFO     | pages.base_page:navigate:17 - Điều hướng đến: https://www.saucedemo.com
+2026-04-18 09:48:04 | INFO     | pages.login_page:login:18 - Bắt đầu quy trình đăng nhập với user: problem_user
+2026-04-18 09:48:04 | INFO     | pages.base_page:fill:34 - Nhập 'problem_user' vào trường: Trường Username
+2026-04-18 09:48:04 | INFO     | pages.base_page:fill:34 - Nhập 'secret_sauce' vào trường: Trường Password
+2026-04-18 09:48:04 | INFO     | pages.base_page:click:24 - Click vào phần tử: Nút Đăng nhập
+2026-04-18 09:48:04 | INFO     | test_login:test_login_from_excel:45 - Đăng nhập thành công với user: problem_user
+2026-04-18 09:48:04 | INFO     | conftest:page:33 - Khởi tạo Page context mới.
+2026-04-18 09:48:04 | INFO     | test_login:test_login_from_excel:33 - Bắt đầu test case cho user: 'wrong_user'
+2026-04-18 09:48:04 | INFO     | pages.base_page:navigate:17 - Điều hướng đến: https://www.saucedemo.com
+2026-04-18 09:48:06 | INFO     | pages.login_page:login:18 - Bắt đầu quy trình đăng nhập với user: wrong_user
+2026-04-18 09:48:06 | INFO     | pages.base_page:fill:34 - Nhập 'wrong_user' vào trường: Trường Username
+2026-04-18 09:48:06 | INFO     | pages.base_page:fill:34 - Nhập 'secret_sauce' vào trường: Trường Password
+2026-04-18 09:48:06 | INFO     | pages.base_page:click:24 - Click vào phần tử: Nút Đăng nhập
+2026-04-18 09:48:06 | INFO     | pages.base_page:get_text:44 - Lấy text từ h3[data-test='error']: Epic sadface: Username and password do not match any user in this service
+2026-04-18 09:48:06 | INFO     | test_login:test_login_from_excel:51 - Đăng nhập thất bại (đúng kỳ vọng) với lỗi: Epic sadface: Username and password do not match any user in this service
+2026-04-18 09:48:07 | INFO     | conftest:page:33 - Khởi tạo Page context mới.
+2026-04-18 09:48:07 | INFO     | test_login:test_login_from_excel:33 - Bắt đầu test case cho user: 'standard_user'
+2026-04-18 09:48:07 | INFO     | pages.base_page:navigate:17 - Điều hướng đến: https://www.saucedemo.com
+2026-04-18 09:48:09 | INFO     | pages.login_page:login:18 - Bắt đầu quy trình đăng nhập với user: standard_user
+2026-04-18 09:48:09 | INFO     | pages.base_page:fill:34 - Nhập 'standard_user' vào trường: Trường Username
+2026-04-18 09:48:09 | INFO     | pages.base_page:fill:34 - Nhập 'wrong_password' vào trường: Trường Password
+2026-04-18 09:48:09 | INFO     | pages.base_page:click:24 - Click vào phần tử: Nút Đăng nhập
+2026-04-18 09:48:09 | INFO     | pages.base_page:get_text:44 - Lấy text từ h3[data-test='error']: Epic sadface: Username and password do not match any user in this service
+2026-04-18 09:48:09 | INFO     | test_login:test_login_from_excel:51 - Đăng nhập thất bại (đúng kỳ vọng) với lỗi: Epic sadface: Username and password do not match any user in this service
+2026-04-18 09:48:10 | INFO     | conftest:page:33 - Khởi tạo Page context mới.
+2026-04-18 09:48:10 | INFO     | test_login:test_login_from_excel:33 - Bắt đầu test case cho user: ''
+2026-04-18 09:48:10 | INFO     | pages.base_page:navigate:17 - Điều hướng đến: https://www.saucedemo.com
+2026-04-18 09:48:11 | INFO     | pages.login_page:login:18 - Bắt đầu quy trình đăng nhập với user: 
+2026-04-18 09:48:11 | INFO     | pages.base_page:fill:34 - Nhập '' vào trường: Trường Username
+2026-04-18 09:48:12 | INFO     | pages.base_page:fill:34 - Nhập '' vào trường: Trường Password
+2026-04-18 09:48:12 | INFO     | pages.base_page:click:24 - Click vào phần tử: Nút Đăng nhập
+2026-04-18 09:48:12 | INFO     | pages.base_page:get_text:44 - Lấy text từ h3[data-test='error']: Epic sadface: Username is required
+2026-04-18 09:48:12 | INFO     | test_login:test_login_from_excel:51 - Đăng nhập thất bại (đúng kỳ vọng) với lỗi: Epic sadface: Username is required
+2026-04-18 09:48:12 | INFO     | conftest:page:33 - Khởi tạo Page context mới.
+2026-04-18 09:48:12 | INFO     | pages.base_page:navigate:17 - Điều hướng đến: https://www.saucedemo.com
+2026-04-18 09:48:14 | INFO     | conftest:browser:23 - Đóng trình duyệt.
