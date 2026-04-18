@@ -1,0 +1,18 @@
+{
+    "USERNAME": {
+        "selector": "#username",
+        "type": "action"
+    },
+    "PASSWORD": {
+        "selector": "#password",
+        "type": "action"
+    },
+    "LOGINBUTTON": {
+        "selector": "#loginbutton",
+        "type": "action"
+    },
+    "ERRORMSG": {
+        "selector": "#errorMsg",
+        "type": "info"
+    }
+}

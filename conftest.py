@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 import allure
 from playwright.sync_api import sync_playwright
@@ -14,10 +16,10 @@ def playwright_instance():
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
     """Khởi tạo trình duyệt dựa trên cấu hình trong Config."""
-    browser_type = getattr(playwright_instance, Config.BROWSER)
-    log.info(f"Khởi động trình duyệt: {Config.BROWSER}")
+    browser_type = getattr(playwright_instance, Config.get_base_browser())
+    log.info(f"Khởi động trình duyệt: {Config.get_base_browser()}")
     
-    browser = browser_type.launch(headless=Config.HEADLESS)
+    browser = browser_type.launch(headless=Config.get_headless())
     yield browser
     
     log.info("Đóng trình duyệt.")
@@ -50,7 +52,8 @@ def pytest_runtest_makereport(item, call):
         # Lấy fixture 'page' từ test case hiện tại
         page = item.funcargs.get("page")
         if page:
-            screenshot_name = f"FAILED_{item.name}"
+            timestamp = datetime.now().strftime("%H%M%S")
+            screenshot_name = f"FAILED_{item.name}_{timestamp}"
             # Chụp ảnh và lưu vào thư mục local
             screenshot_path = Helpers.capture_screenshot(page, screenshot_name)
             

@@ -1,53 +1,110 @@
+import re
+
 import pandas as pd
+import json
 from pathlib import Path
 from utils.logger import log
 from config.config import Config
 
 class Helpers:
     """
-    Chứa các hàm tiện ích dùng chung cho toàn bộ dự án như đọc file, 
-    xử lý chuỗi, hoặc chụp ảnh màn hình.
+    Chứa các hàm tiện ích dùng chung. 
+    Đã được nâng cấp để hỗ trợ cấu hình Generic JSON và Excel theo từng Site.
     """
 
+    # @staticmethod
+    # def read_excel_data(file_name, site_folder=None):
+    #     """
+    #     Đọc dữ liệu từ file Excel. 
+    #     Nếu có site_folder, sẽ tìm trong test_data/[site_folder]/file_name.
+    #     """
+    #     if site_folder:
+    #         file_path = Config.TEST_DATA_DIR / site_folder / file_name
+    #     else:
+    #         file_path = Config.TEST_DATA_DIR / file_name
+        
+    #     try:
+    #         log.info(f"Đang đọc dữ liệu Excel: {file_path}")
+    #         df = pd.read_excel(file_path)
+    #         data = df.to_dict(orient='records')
+    #         log.info(f"Đọc thành công {len(data)} dòng dữ liệu.")
+    #         return data
+    #     except Exception as e:
+    #         log.error(f"Lỗi khi đọc file Excel: {str(e)}")
+    #         return []
+
     @staticmethod
-    def read_excel_data(file_name, sheet_name=0):
+    def read_excel_data(file_name, site_folder=None, max_show=10):
         """
-        Đọc dữ liệu từ file Excel và trả về danh sách các Dictionary.
-        Mỗi Dictionary tương ứng với một dòng trong Excel (Key là tiêu đề cột).
+        Đọc dữ liệu từ file Excel và luôn in preview để kiểm tra.
+        Không dùng input(), không block pytest.
         """
-        file_path = Config.TEST_DATA_DIR / file_name
+        if site_folder:
+            domain = site_folder.replace('.', '_').replace(':', '' )
+            site_folder = re.sub(r'[\\/*?:"<>|]', "", domain)  # Chuyển đổi tên miền thành folder hợp lệ
+            file_path = Config.TEST_DATA_DIR / site_folder / file_name
+        else:
+            file_path = Config.TEST_DATA_DIR / file_name
         
         try:
-            log.info(f"Đang đọc dữ liệu từ file: {file_path}, sheet: {sheet_name}")
-            # Đọc file bằng pandas
-            df = pd.read_excel(file_path, sheet_name=sheet_name)
-            
-            # Chuyển đổi DataFrame thành danh sách các bản ghi (list of dicts)
-            # Rất phù hợp để truyền vào @pytest.mark.parametrize
+            log.info(f"Đang đọc dữ liệu Excel: {file_path}")
+
+            if not file_path.exists():
+                raise FileNotFoundError(f"Không tìm thấy file: {file_path}")
+
+            df = pd.read_excel(file_path, dtype=str)
+            df = df.fillna("")
+
             data = df.to_dict(orient='records')
-            
+
             log.info(f"Đọc thành công {len(data)} dòng dữ liệu.")
-            return data
+
+            # ===== IN PREVIEW (KHÔNG BLOCK) =====
             
-        except FileNotFoundError:
-            log.error(f"Không tìm thấy file dữ liệu tại: {file_path}")
-            return []
+            preview = data[:max_show]
+
+            print("\n" + "="*50)
+            print("📊 DATA PREVIEW:")
+            print(f"đường dẫn: {file_path}")
+            for i, row in enumerate(preview, 1):
+                print(f"{i}: {row}")
+
+            if len(data) > max_show:
+                print(f"... (còn {len(data) - max_show} dòng)")
+
+            print("="*50 + "\n")
+            # ===================================
+
+            return data
+
         except Exception as e:
-            log.error(f"Lỗi khi đọc file Excel: {str(e)}")
+            log.exception(f"Lỗi khi đọc file Excel: {e}")
             return []
+    #sua...
+    @staticmethod
+    def load_json_config(file_path):
+        """
+        Hàm mới: Đọc cấu hình JSON (Locators hoặc Templates).
+        Đây là lõi của việc chạy test không cần viết lại code.
+        """
+        try:
+            if not Path(file_path).exists():
+                log.error(f"Không tìm thấy file JSON: {file_path}")
+                return None
+            with open(file_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            log.error(f"Lỗi khi đọc JSON {file_path}: {str(e)}")
+            return None
+    #sua xong
 
     @staticmethod
     def capture_screenshot(page, name):
-        """
-        Chụp ảnh màn hình trình duyệt Playwright và lưu vào thư mục reports/screenshots.
-        """
+        """Lưu ảnh màn hình vào reports/screenshots."""
         try:
-            # Tạo thư mục screenshots nếu chưa có
             Config.SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
-            
             file_path = Config.SCREENSHOTS_DIR / f"{name}.png"
             page.screenshot(path=file_path)
-            
             log.info(f"Đã lưu ảnh chụp màn hình tại: {file_path}")
             return str(file_path)
         except Exception as e:

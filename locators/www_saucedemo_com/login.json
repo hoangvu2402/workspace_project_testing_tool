@@ -1,0 +1,18 @@
+{
+    "USER_NAME": {
+        "selector": "#user-name",
+        "type": "action"
+    },
+    "PASSWORD": {
+        "selector": "#password",
+        "type": "action"
+    },
+    "LOGIN_BUTTON": {
+        "selector": "#login-button",
+        "type": "action"
+    },
+    "H3": {
+        "selector": "[data-test=\"error\"]",
+        "type": "info"
+    }
+}

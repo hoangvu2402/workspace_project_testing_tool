@@ -1,0 +1,26 @@
+{
+    "page_id": "login",
+    "url": "http://127.0.0.1:5501/index/index.html",
+    "steps": [
+        {
+            "id": "USERNAME",
+            "action": "fill",
+            "data_key": "username"
+        },
+        {
+            "id": "PASSWORD",
+            "action": "fill_password",
+            "data_key": "password"
+        },
+        {
+            "id": "LOGINBUTTON",
+            "action": "click",
+            "data_key": "loginbutton"
+        },
+        {
+            "id": "ERRORMSG",
+            "action": "verify_text",
+            "data_key": "errormsg"
+        }
+    ]
+}

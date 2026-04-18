@@ -34,11 +34,13 @@ def setup_logger():
         format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}",
         level="DEBUG",
         encoding="utf-8",
-        rotation="10 MB", # Tự động tạo file mới nếu file cũ > 10MB
-        retention="30 days" # Xóa log cũ sau 30 ngày
+        rotation="10 MB",
+        retention="30 days"
     )
 
     return logger
 
-# Khởi tạo instance logger để các module khác có thể import trực tiếp
+# CHỖ SỬA QUAN TRỌNG: 
+# Không 'from utils.logger import log' ở đây. 
+# Ta gán trực tiếp instance đã setup cho biến 'log'.
 log = setup_logger()
