@@ -7,7 +7,6 @@ import shutil
 from pathlib import Path
 from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
-from tkinter import messagebox
 
 class AutomationLogic:
     def __init__(self):
@@ -19,13 +18,14 @@ class AutomationLogic:
         domain = parsed_url.netloc.replace('.', '_') if parsed_url.netloc else "unknown_site"
         return re.sub(r'[\\/*?:"<>|]', "", domain)
 
-    def scan_url(self, url):
+    def scan_url(self, url, browser_name="chromium"):
         """Thực hiện quét trang web bằng Playwright và trả về danh sách phần tử bao gồm cả các thẻ rỗng"""
         if not url:
             raise ValueError("URL không được để trống")
-        
+
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
+            browser_type = getattr(p, browser_name, p.chromium)
+            browser = browser_type.launch(headless=True)
             page = browser.new_page()
             page.goto(url, timeout=60000)
             

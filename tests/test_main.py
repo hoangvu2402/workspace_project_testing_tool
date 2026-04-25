@@ -1,17 +1,14 @@
 import pytest
 import allure
-import os
-from pathlib import Path
 from config.config import Config
 from core.generic_runner import GenericRunner
 from utils.helpers import Helpers
 from utils.logger import log
-from config.config import Config
-import re
+from logic_manager import AutomationLogic
 
-SITE_NAME = Config.get_base_url().split("//")[-1].split("/")[0]  # Lấy tên miền chính làm SITE_NAME 
-domain = SITE_NAME.replace('.', '_').replace(':', '' )
-SITE_NAME = re.sub(r'[\\/*?:"<>|]', "", domain)
+_logic = AutomationLogic()
+_base_url = Config.get_base_url() or ""
+SITE_NAME = _logic.get_site_folder_name(_base_url) if _base_url else "unknown_site"
 
 TEST_FILE = Config.get_selected_test_data()
 PAGE_ID = Config.get_page_id()

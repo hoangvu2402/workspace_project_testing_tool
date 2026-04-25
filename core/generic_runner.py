@@ -70,12 +70,10 @@ class GenericRunner:
 
         if action == "fill":
             self.base_page.fill(selector, value, step_name)
-        
-        if action == "fill_password":
+
+        elif action == "fill_password":
             self.base_page.fill(selector, value, step_name)
 
-            
-        
         elif action == "click":
             self.base_page.click(selector, step_name)
         

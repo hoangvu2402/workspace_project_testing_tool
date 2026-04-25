@@ -19,23 +19,27 @@ class Config:
  
     @staticmethod
     def get_base_url():
-        return os.environ.get("BASE_URL") 
-   
-    def get_base_browser():
-        return os.environ.get("BROWSER")  
-    
-    def get_selected_test_data():
-        return os.environ.get("SELECTED_TEST_DATA") 
-    
-    def get_selected_sheet():
-        return os.environ.get("SHEET_NAME") or os.getenv("SHEET_NAME", "Sheet1")
+        return os.environ.get("BASE_URL")
 
-    
+    @staticmethod
+    def get_base_browser():
+        return os.environ.get("BROWSER", "chromium")
+
+    @staticmethod
+    def get_selected_test_data():
+        return os.environ.get("SELECTED_TEST_DATA")
+
+    @staticmethod
+    def get_selected_sheet():
+        return os.environ.get("SHEET_NAME", "Sheet1")
+
+    @staticmethod
     def get_headless():
-        return str(os.environ.get("HEADLESS") or os.getenv("HEADLESS", "False")).lower() == "true"
-    
+        return str(os.environ.get("HEADLESS", "False")).lower() == "true"
+
+    @staticmethod
     def get_page_id():
-        return os.environ.get("PAGE_ID") or os.getenv("PAGE_ID", "default_page")
+        return os.environ.get("PAGE_ID", "default_page")
 
 
     try:

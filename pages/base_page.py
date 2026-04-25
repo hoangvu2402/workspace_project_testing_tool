@@ -68,7 +68,7 @@ class BasePage:
         try:
             self.page.wait_for_selector(selector, state="visible", timeout=timeout)
             return self.page.is_visible(selector)
-        except:
+        except Exception:
             return False
 
     def wait_for_element(self, selector: str, timeout: int = 10000):
