@@ -3,6 +3,7 @@ from tkinter import ttk
 from logic_manager import AutomationLogic
 from ui.locator_panel import LocatorPanel
 from ui.test_runner_panel import TestRunnerPanel
+from ui.action_manager_panel import ActionManagerPanel
 
 
 class AutomationGeneratorUI:
@@ -36,6 +37,10 @@ class AutomationGeneratorUI:
         # Tab 2 – Test Runner
         self.test_runner_panel = TestRunnerPanel(notebook, self.logic, self.shared_vars)
         notebook.add(self.test_runner_panel, text="  Test Runner  ")
+
+        # Tab 3 – Action Manager
+        self.action_manager = ActionManagerPanel(notebook, self.logic, self.shared_vars)
+        notebook.add(self.action_manager, text="  Action Manager  ")
 
         # When project path changes in locator panel, refresh test runner lists
         self.locator_panel.on_project_changed = self._on_project_changed
