@@ -37,11 +37,6 @@ class LocatorPanel(ttk.Frame):
         ttk.Label(cfg, text="Page ID (VD: login):").grid(row=2, column=0, sticky="w")
         ttk.Entry(cfg, textvariable=self.shared["page_id_var"], width=30).grid(row=2, column=1, sticky="w", padx=5)
 
-        ttk.Label(cfg, text="Trinh duyet:").grid(row=2, column=2, sticky="w", padx=10)
-        browser_combo = ttk.Combobox(cfg, textvariable=self.shared["browser_var"], width=15)
-        browser_combo["values"] = ("chromium", "firefox", "webkit")
-        browser_combo.grid(row=2, column=3, sticky="w", padx=5)
-
     def _build_control_buttons(self):
         ctl = ttk.Frame(self, padding=5)
         ctl.pack(fill="x")
@@ -106,12 +101,11 @@ class LocatorPanel(ttk.Frame):
             messagebox.showwarning("Chu y", "Vui long nhap URL")
             return
 
-        browser_name = self.shared["browser_var"].get()
-        self._append_log(f"Bat dau quet: {url} (browser={browser_name})...")
+        self._append_log(f"Bat dau quet: {url}...")
 
         def run_scan():
             try:
-                elements = self.logic.scan_url(url, browser_name=browser_name)
+                elements = self.logic.scan_url(url)
                 self.after(0, lambda: self._update_tree(elements))
                 self.after(0, lambda: self._append_log(f"Da tim thay {len(elements)} phan tu."))
             except Exception as e:

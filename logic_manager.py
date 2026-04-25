@@ -198,6 +198,36 @@ class AutomationLogic:
         
         return [f.name for f in data_dir.glob("*.xlsx")]
 
+    def get_template_files(self, project_path):
+        """List all template workflow JSON files across all sites."""
+        p_path = Path(project_path) / "templates"
+        if not p_path.exists():
+            return []
+        results = []
+        for f in sorted(p_path.rglob("*_workflow.json")):
+            rel = f.relative_to(p_path)
+            results.append(str(rel))
+        return results
+
+    def get_all_data_files(self, project_path):
+        """List all Excel data files across all sites."""
+        p_path = Path(project_path) / "test_data"
+        if not p_path.exists():
+            return []
+        results = []
+        for f in sorted(p_path.rglob("*.xlsx")):
+            rel = f.relative_to(p_path)
+            results.append(str(rel))
+        return results
+
+    def get_template_info(self, project_path, template_rel_path):
+        """Read a template JSON and return its content (page_id, url, steps)."""
+        full_path = Path(project_path) / "templates" / template_rel_path
+        if not full_path.exists():
+            return None
+        with open(full_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
     def get_pytest_command(self, test_file):
         """Tạo lệnh chạy pytest"""
         return [sys.executable, "-m", "pytest", test_file, "-v", "-s", "--tb=no"]
