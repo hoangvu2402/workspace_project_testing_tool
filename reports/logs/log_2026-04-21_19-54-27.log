@@ -1,0 +1,216 @@
+2026-04-21 19:54:27 | INFO     | config.config:<module>:12 - Loaded environment variables from E:\doantotnghiep\doan2\.env
+2026-04-21 19:54:27 | INFO     | config.config:validate_config:62 - ==================================================
+2026-04-21 19:54:27 | INFO     | config.config:validate_config:63 -       THÔNG TIN CẤU HÌNH HỆ THỐNG
+2026-04-21 19:54:27 | INFO     | config.config:validate_config:64 -   > URL Mục tiêu : https://www.youtube.com/watch?v=PMQ4-TLXOKk&list=RDhAG-h8tNBdQ&index=6
+2026-04-21 19:54:27 | INFO     | config.config:validate_config:65 -   > Trình duyệt : chromium (Headless: False)
+2026-04-21 19:54:27 | INFO     | config.config:validate_config:66 -   > Timeout     : 30000 ms
+2026-04-21 19:54:27 | INFO     | config.config:validate_config:67 - ==================================================
+2026-04-21 19:54:28 | INFO     | test_main:<module>:19 - 🎯 Thực thi Test cho Site: www_youtube_com | Page: test_data\www_saucedemo_com\login_data.xlsx
+2026-04-21 19:54:28 | WARNING  | utils.helpers:read_excel_data:50 - ⚠️ đang tìm file tại: E:\doantotnghiep\doan2\test_data\www_youtube_com\test_data\www_saucedemo_com\login_data.xlsx ----- test_data\www_saucedemo_com\login_data.xlsx --- www_youtube_com
+2026-04-21 19:54:28 | INFO     | utils.helpers:read_excel_data:53 - Đang đọc dữ liệu Excel: E:\doantotnghiep\doan2\test_data\www_youtube_com\test_data\www_saucedemo_com\login_data.xlsx
+2026-04-21 19:54:28 | ERROR    | utils.helpers:read_excel_data:82 - Lỗi khi đọc file Excel: Không tìm thấy file: E:\doantotnghiep\doan2\test_data\www_youtube_com\test_data\www_saucedemo_com\login_data.xlsx
+Traceback (most recent call last):
+
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+                     │      └ <function console_main at 0x0000021E6AA764B0>
+                     └ <module 'pytest' from 'E:\\doantotnghiep\\doan2\\vir_env\\Lib\\site-packages\\pytest\\__init__.py'>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\config\__init__.py", line 223, in console_main
+    code = main()
+           └ <function main at 0x0000021E6AA76350>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\config\__init__.py", line 199, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+         │                │      │    │                          └ <_pytest.config.Config object at 0x0000021E6B6782F0>
+         │                │      │    └ <HookCaller 'pytest_cmdline_main'>
+         │                │      └ <_pytest.config.compat.PathAwareHookProxy object at 0x0000021E6B678EC0>
+         │                └ <_pytest.config.Config object at 0x0000021E6B6782F0>
+         └ <enum 'ExitCode'>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           │    │         │    │     │    │                  │       └ True
+           │    │         │    │     │    │                  └ {'config': <_pytest.config.Config object at 0x0000021E6B6782F0>}
+           │    │         │    │     │    └ <member '_hookimpls' of 'HookCaller' objects>
+           │    │         │    │     └ <HookCaller 'pytest_cmdline_main'>
+           │    │         │    └ <member 'name' of 'HookCaller' objects>
+           │    │         └ <HookCaller 'pytest_cmdline_main'>
+           │    └ <member '_hookexec' of 'HookCaller' objects>
+           └ <HookCaller 'pytest_cmdline_main'>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           │    │               │          │        │       └ True
+           │    │               │          │        └ {'config': <_pytest.config.Config object at 0x0000021E6B6782F0>}
+           │    │               │          └ [<HookImpl plugin_name='main', plugin=<module '_pytest.main' from 'E:\\doantotnghiep\\doan2\\vir_env\\Lib\\site-packages\\_py...
+           │    │               └ 'pytest_cmdline_main'
+           │    └ <function _multicall at 0x0000021E6A29E820>
+           └ <_pytest.config.PytestPluginManager object at 0x0000021E6B5367B0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          │         │         └ [<_pytest.config.Config object at 0x0000021E6B6782F0>]
+          │         └ <member 'function' of 'HookImpl' objects>
+          └ <HookImpl plugin_name='main', plugin=<module '_pytest.main' from 'E:\\doantotnghiep\\doan2\\vir_env\\Lib\\site-packages\\_pyt...
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\main.py", line 365, in pytest_cmdline_main
+    return wrap_session(config, _main)
+           │            │       └ <function _main at 0x0000021E6ABA2C40>
+           │            └ <_pytest.config.Config object at 0x0000021E6B6782F0>
+           └ <function wrap_session at 0x0000021E6ABA2980>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\main.py", line 318, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+    │       │            │    │       └ <Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
+    │       │            │    └ <_pytest.config.Config object at 0x0000021E6B6782F0>
+    │       │            └ <function _main at 0x0000021E6ABA2C40>
+    │       └ <ExitCode.OK: 0>
+    └ <Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\main.py", line 371, in _main
+    config.hook.pytest_collection(session=session)
+    │      │    │                         └ <Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
+    │      │    └ <HookCaller 'pytest_collection'>
+    │      └ <_pytest.config.compat.PathAwareHookProxy object at 0x0000021E6B678EC0>
+    └ <_pytest.config.Config object at 0x0000021E6B6782F0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           │    │         │    │     │    │                  │       └ True
+           │    │         │    │     │    │                  └ {'session': <Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>}
+           │    │         │    │     │    └ <member '_hookimpls' of 'HookCaller' objects>
+           │    │         │    │     └ <HookCaller 'pytest_collection'>
+           │    │         │    └ <member 'name' of 'HookCaller' objects>
+           │    │         └ <HookCaller 'pytest_collection'>
+           │    └ <member '_hookexec' of 'HookCaller' objects>
+           └ <HookCaller 'pytest_collection'>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           │    │               │          │        │       └ True
+           │    │               │          │        └ {'session': <Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>}
+           │    │               │          └ [<HookImpl plugin_name='main', plugin=<module '_pytest.main' from 'E:\\doantotnghiep\\doan2\\vir_env\\Lib\\site-packages\\_py...
+           │    │               └ 'pytest_collection'
+           │    └ <function _multicall at 0x0000021E6A29E820>
+           └ <_pytest.config.PytestPluginManager object at 0x0000021E6B5367B0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          │         │         └ [<Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>]
+          │         └ <member 'function' of 'HookImpl' objects>
+          └ <HookImpl plugin_name='main', plugin=<module '_pytest.main' from 'E:\\doantotnghiep\\doan2\\vir_env\\Lib\\site-packages\\_pyt...
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\main.py", line 382, in pytest_collection
+    session.perform_collect()
+    │       └ <function Session.perform_collect at 0x0000021E6ABE57A0>
+    └ <Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\main.py", line 857, in perform_collect
+    self.items.extend(self.genitems(node))
+    │    │     │      │    │        └ <Module test_main.py>
+    │    │     │      │    └ <function Session.genitems at 0x0000021E6ABE5BC0>
+    │    │     │      └ <Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
+    │    │     └ <method 'extend' of 'list' objects>
+    │    └ []
+    └ <Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\main.py", line 1020, in genitems
+    rep, duplicate = self._collect_one_node(node, handle_dupes)
+                     │    │                 │     └ False
+                     │    │                 └ <Module test_main.py>
+                     │    └ <function Session._collect_one_node at 0x0000021E6ABE5900>
+                     └ <Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\main.py", line 883, in _collect_one_node
+    rep = collect_one_node(node)
+          │                └ <Module test_main.py>
+          └ <function collect_one_node at 0x0000021E6ABA26C0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\runner.py", line 576, in collect_one_node
+    rep: CollectReport = ihook.pytest_make_collect_report(collector=collector)
+                         │     │                                    └ <Module test_main.py>
+                         │     └ <HookCaller 'pytest_make_collect_report'>
+                         └ <_pytest.config.compat.PathAwareHookProxy object at 0x0000021E6B678EC0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           │    │         │    │     │    │                  │       └ True
+           │    │         │    │     │    │                  └ {'collector': <Module test_main.py>}
+           │    │         │    │     │    └ <member '_hookimpls' of 'HookCaller' objects>
+           │    │         │    │     └ <HookCaller 'pytest_make_collect_report'>
+           │    │         │    └ <member 'name' of 'HookCaller' objects>
+           │    │         └ <HookCaller 'pytest_make_collect_report'>
+           │    └ <member '_hookexec' of 'HookCaller' objects>
+           └ <HookCaller 'pytest_make_collect_report'>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           │    │               │          │        │       └ True
+           │    │               │          │        └ {'collector': <Module test_main.py>}
+           │    │               │          └ [<HookImpl plugin_name='runner', plugin=<module '_pytest.runner' from 'E:\\doantotnghiep\\doan2\\vir_env\\Lib\\site-packages\...
+           │    │               └ 'pytest_make_collect_report'
+           │    └ <function _multicall at 0x0000021E6A29E820>
+           └ <_pytest.config.PytestPluginManager object at 0x0000021E6B5367B0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          │         │         └ [<Module test_main.py>]
+          │         └ <member 'function' of 'HookImpl' objects>
+          └ <HookImpl plugin_name='runner', plugin=<module '_pytest.runner' from 'E:\\doantotnghiep\\doan2\\vir_env\\Lib\\site-packages\\...
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\runner.py", line 400, in pytest_make_collect_report
+    call = CallInfo.from_call(
+           │        └ <classmethod(<function CallInfo.from_call at 0x0000021E6ABA1BC0>)>
+           └ <class '_pytest.runner.CallInfo'>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\runner.py", line 353, in from_call
+    result: TResult | None = func()
+            │                └ <function pytest_make_collect_report.<locals>.collect at 0x0000021E003D6A30>
+            └ +TResult
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\runner.py", line 398, in collect
+    return list(collector.collect())
+                │         └ <function Module.collect at 0x0000021E6AC9B690>
+                └ <Module test_main.py>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\python.py", line 563, in collect
+    self._register_setup_module_fixture()
+    │    └ <function Module._register_setup_module_fixture at 0x0000021E6AC9B7F0>
+    └ <Module test_main.py>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\python.py", line 576, in _register_setup_module_fixture
+    self.obj, ("setUpModule", "setup_module")
+    │    └ <property object at 0x0000021E6AC91440>
+    └ <Module test_main.py>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\python.py", line 289, in obj
+    self._obj = obj = self._getobj()
+    │                 │    └ <function Module._getobj at 0x0000021E6AC9B530>
+    │                 └ <Module test_main.py>
+    └ <Module test_main.py>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\python.py", line 560, in _getobj
+    return importtestmodule(self.path, self.config)
+           │                │    │     │    └ <member 'config' of 'Node' objects>
+           │                │    │     └ <Module test_main.py>
+           │                │    └ <member 'path' of 'Node' objects>
+           │                └ <Module test_main.py>
+           └ <function importtestmodule at 0x0000021E6AC9B3D0>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\python.py", line 507, in importtestmodule
+    mod = import_path(
+          └ <function import_path at 0x0000021E6A976C40>
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\pathlib.py", line 587, in import_path
+    importlib.import_module(module_name)
+    │         │             └ 'test_main'
+    │         └ <function import_module at 0x0000021E69C978A0>
+    └ <module 'importlib' from 'C:\\Python314\\Lib\\importlib\\__init__.py'>
+  File "C:\Python314\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           │          │           │    │        │        └ 0
+           │          │           │    │        └ None
+           │          │           │    └ 0
+           │          │           └ 'test_main'
+           │          └ <function _gcd_import at 0x0000021E69A1BE20>
+           └ <module '_frozen_importlib' (frozen)>
+  File "<frozen importlib._bootstrap>", line 1406, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "E:\doantotnghiep\doan2\vir_env\Lib\site-packages\_pytest\assertion\rewrite.py", line 197, in exec_module
+    exec(co, module.__dict__)
+         │   │      └ <member '__dict__' of 'module' objects>
+         │   └ <module 'test_main' from 'E:\\doantotnghiep\\doan2\\tests\\test_main.py'>
+         └ <code object <module> at 0x0000021E6D879690, file "E:\doantotnghiep\doan2\tests\test_main.py", line 1>
+
+  File "E:\doantotnghiep\doan2\tests\test_main.py", line 22, in <module>
+    class TestAutomationGeneric:
+
+  File "E:\doantotnghiep\doan2\tests\test_main.py", line 28, in TestAutomationGeneric
+    Helpers.read_excel_data(f"{TEST_FILE}", site_folder=SITE_NAME)
+    │       │                  │                        └ 'www_youtube_com'
+    │       │                  └ 'test_data\\www_saucedemo_com\\login_data.xlsx'
+    │       └ <staticmethod(<function Helpers.read_excel_data at 0x0000021E6EB5B480>)>
+    └ <class 'utils.helpers.Helpers'>
+
+> File "E:\doantotnghiep\doan2\utils\helpers.py", line 56, in read_excel_data
+    raise FileNotFoundError(f"Không tìm thấy file: {file_path}")
+                                                    └ WindowsPath('E:/doantotnghiep/doan2/test_data/www_youtube_com/test_data/www_saucedemo_com/login_data.xlsx')
+
+FileNotFoundError: Không tìm thấy file: E:\doantotnghiep\doan2\test_data\www_youtube_com\test_data\www_saucedemo_com\login_data.xlsx

@@ -5,11 +5,6 @@ from config.config import Config
 from pathlib import Path
 
 class GenericRunner:
-    """
-    Bộ não thực thi (Execution Engine):
-    Điều phối luồng test bằng cách kết hợp Locators, Workflow và Dữ liệu Excel.
-    """
-
     def __init__(self, page, site_name, page_id):
         self.page = page
         self.site_name = site_name
@@ -19,7 +14,7 @@ class GenericRunner:
         # Đường dẫn gốc tới các thư mục cấu hình
         base_dir = Config.BASE_DIR
         
-        # Load cấu hình Locators và Workflow từ thư mục site-based
+    
         self.locators = Helpers.load_json_config(base_dir / "locators" / site_name / f"{page_id}.json")
         self.workflow = Helpers.load_json_config(base_dir / "templates" / site_name / f"{page_id}_workflow.json")
 
@@ -73,7 +68,6 @@ class GenericRunner:
             log.warning(f"⚠️ Bỏ qua bước '{step_id}': Không tìm thấy Selector.")
             return
 
-        # --- THỰC THI HÀNH ĐỘNG ---
         if action == "fill":
             self.base_page.fill(selector, value, step_name)
         
@@ -92,7 +86,7 @@ class GenericRunner:
 
             log.info(f"🔍 Kiểm tra văn bản: Kỳ vọng chứa '{value}', thực tế có '{actual_text}'")
 
-            # ❗ CHẶN PASS GIẢ
+            # chặn pass giả nếu value rỗng nhưng thực tế có text (có thể do lỗi locator hoặc thay đổi giao diện)
             if not value and actual_text.strip() != "":
                 raise AssertionError(
                     f"❌ Step '{step_id}' không có value (data_key='{data_key}') dù thực tế có text: '{actual_text}'"
@@ -103,7 +97,6 @@ class GenericRunner:
 
         elif action == "verify_visible":
             is_visible = self.base_page.is_visible(selector)
-            # Nếu không thấy phần tử, snapshot sẽ giúp biết thẻ đó đang có trạng thái gì (ẩn/không tồn tại)
             if not is_visible:
                 self.base_page.get_element_snapshot(selector)
             assert is_visible, f"❌ Lỗi hiển thị: Không tìm thấy phần tử '{step_name}'"

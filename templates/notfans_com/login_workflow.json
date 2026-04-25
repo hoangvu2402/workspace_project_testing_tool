@@ -1,0 +1,330 @@
+{
+    "page_id": "login",
+    "steps": [
+        {
+            "id": "CAMSODA_AI",
+            "action": "verify_text",
+            "data_key": "camsoda_ai"
+        },
+        {
+            "id": "CAMSODA_AI",
+            "action": "verify_text",
+            "data_key": "camsoda_ai"
+        },
+        {
+            "id": "CAMSODA_AI",
+            "action": "verify_text",
+            "data_key": "camsoda_ai"
+        },
+        {
+            "id": "CAMSODA_AI",
+            "action": "verify_text",
+            "data_key": "camsoda_ai"
+        },
+        {
+            "id": "CHAT_NOW",
+            "action": "verify_text",
+            "data_key": "chat_now"
+        },
+        {
+            "id": "X",
+            "action": "verify_text",
+            "data_key": "x"
+        },
+        {
+            "id": "SIGN_UP",
+            "action": "verify_text",
+            "data_key": "sign_up"
+        },
+        {
+            "id": "SIGN_UP",
+            "action": "verify_text",
+            "data_key": "sign_up"
+        },
+        {
+            "id": "SIGN_UP",
+            "action": "verify_text",
+            "data_key": "sign_up"
+        },
+        {
+            "id": "SIGN_UP",
+            "action": "click",
+            "data_key": "sign_up"
+        },
+        {
+            "id": "LOGIN",
+            "action": "click",
+            "data_key": "login"
+        },
+        {
+            "id": "SEARCH",
+            "action": "verify_text",
+            "data_key": "search"
+        },
+        {
+            "id": "SEARCH",
+            "action": "verify_text",
+            "data_key": "search"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "SEARCH",
+            "action": "verify_text",
+            "data_key": "search"
+        },
+        {
+            "id": "SEARCH",
+            "action": "verify_text",
+            "data_key": "search"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "Q",
+            "action": "fill",
+            "data_key": "q"
+        },
+        {
+            "id": "HOME",
+            "action": "verify_text",
+            "data_key": "home"
+        },
+        {
+            "id": "BUTTON",
+            "action": "click",
+            "data_key": "button"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "ITEM1",
+            "action": "click",
+            "data_key": "item1"
+        },
+        {
+            "id": "ITEM2",
+            "action": "click",
+            "data_key": "item2"
+        },
+        {
+            "id": "ITEM3",
+            "action": "click",
+            "data_key": "item3"
+        },
+        {
+            "id": "ITEM4",
+            "action": "click",
+            "data_key": "item4"
+        },
+        {
+            "id": "ITEM10",
+            "action": "click",
+            "data_key": "item10"
+        },
+        {
+            "id": "ITEM11",
+            "action": "click",
+            "data_key": "item11"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "THEPORNDUDE",
+            "action": "click",
+            "data_key": "theporndude"
+        },
+        {
+            "id": "NEW_VIDEOS",
+            "action": "verify_text",
+            "data_key": "new_videos"
+        },
+        {
+            "id": "NEW_VIDEOS",
+            "action": "verify_text",
+            "data_key": "new_videos"
+        },
+        {
+            "id": "NEW_VIDEOS",
+            "action": "verify_text",
+            "data_key": "new_videos"
+        },
+        {
+            "id": "LIST_VIDEOS_LATEST_VIDEOS_LIST",
+            "action": "verify_text",
+            "data_key": "list_videos_latest_videos_list"
+        },
+        {
+            "id": "NEW_VIDEOS",
+            "action": "verify_text",
+            "data_key": "new_videos"
+        },
+        {
+            "id": "NEW_VIDEOS",
+            "action": "verify_text",
+            "data_key": "new_videos"
+        },
+        {
+            "id": "NICKIIBABY",
+            "action": "verify_text",
+            "data_key": "nickiibaby"
+        },
+        {
+            "id": "NICKIIBABY",
+            "action": "verify_text",
+            "data_key": "nickiibaby"
+        },
+        {
+            "id": "LIST_VIDEOS_LATEST_VIDEOS_LIST_ITEMS",
+            "action": "verify_text",
+            "data_key": "list_videos_latest_videos_list_items"
+        },
+        {
+            "id": "NICKIIBABY",
+            "action": "verify_text",
+            "data_key": "nickiibaby"
+        },
+        {
+            "id": "NICKIIBABY",
+            "action": "click",
+            "data_key": "nickiibaby"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "LIST_VIDEOS_LATEST_VIDEOS_LIST_PAGINATION",
+            "action": "verify_text",
+            "data_key": "list_videos_latest_videos_list_pagination"
+        },
+        {
+            "id": "1",
+            "action": "verify_text",
+            "data_key": "1"
+        },
+        {
+            "id": "BACK",
+            "action": "verify_text",
+            "data_key": "back"
+        },
+        {
+            "id": "FIRST",
+            "action": "verify_text",
+            "data_key": "first"
+        },
+        {
+            "id": "1",
+            "action": "verify_text",
+            "data_key": "1"
+        },
+        {
+            "id": "2",
+            "action": "click",
+            "data_key": "2"
+        },
+        {
+            "id": "A_ELEMENT",
+            "action": "click",
+            "data_key": "a_element"
+        },
+        {
+            "id": "LAST",
+            "action": "click",
+            "data_key": "last"
+        },
+        {
+            "id": "NEXT",
+            "action": "click",
+            "data_key": "next"
+        },
+        {
+            "id": "ARE",
+            "action": "verify_text",
+            "data_key": "are"
+        },
+        {
+            "id": "ARE",
+            "action": "click",
+            "data_key": "are"
+        },
+        {
+            "id": "SHOW_ALL_TAGS",
+            "action": "click",
+            "data_key": "show_all_tags"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "HOME",
+            "action": "verify_text",
+            "data_key": "home"
+        },
+        {
+            "id": "HOME",
+            "action": "verify_text",
+            "data_key": "home"
+        },
+        {
+            "id": "HOME",
+            "action": "click",
+            "data_key": "home"
+        },
+        {
+            "id": "1969_2026",
+            "action": "verify_text",
+            "data_key": "1969_2026"
+        },
+        {
+            "id": "NOTFANS",
+            "action": "click",
+            "data_key": "notfans"
+        },
+        {
+            "id": "NOTFANS_COM_IS_NOT_T",
+            "action": "verify_text",
+            "data_key": "notfans_com_is_not_t"
+        }
+    ]
+}

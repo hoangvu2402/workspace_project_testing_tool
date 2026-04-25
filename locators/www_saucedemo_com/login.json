@@ -1,4 +1,12 @@
 {
+    "DIV": {
+        "selector": ".login-box > form > .error-message-container",
+        "type": "info"
+    },
+    "LOGIN_BUTTON_CONTAINER": {
+        "selector": "#login_button_container",
+        "type": "info"
+    },
     "USER_NAME": {
         "selector": "#user-name",
         "type": "action"
@@ -11,8 +19,24 @@
         "selector": "#login-button",
         "type": "action"
     },
-    "H3": {
-        "selector": "[data-test=\"error\"]",
+    "LOGIN_CREDENTIALS_CONTAINER": {
+        "selector": "[data-test=\"login-credentials-container\"]",
+        "type": "info"
+    },
+    "ACCEPTED_USERNAMES_A": {
+        "selector": ".login_credentials_wrap-inner > #login_credentials > h4",
+        "type": "info"
+    },
+    "LOGIN_CREDENTIALS": {
+        "selector": "#login_credentials",
+        "type": "info"
+    },
+    "LOGIN_PASSWORD": {
+        "selector": "[data-test=\"login-password\"]",
+        "type": "info"
+    },
+    "PASSWORD_FOR_ALL_USE": {
+        "selector": ".login_credentials_wrap-inner > [data-test=\"login-password\"] > h4",
         "type": "info"
     }
 }

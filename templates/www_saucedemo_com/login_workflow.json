@@ -3,24 +3,14 @@
     "url": "https://www.saucedemo.com/",
     "steps": [
         {
-            "id": "USER_NAME",
-            "action": "fill",
-            "data_key": "user_name"
-        },
-        {
-            "id": "PASSWORD",
-            "action": "fill_password",
-            "data_key": "password"
-        },
-        {
-            "id": "LOGIN_BUTTON",
-            "action": "click",
-            "data_key": "login_button"
-        },
-        {
-            "id": "H3",
+            "id": "SWAG_LABS",
             "action": "verify_text",
-            "data_key": "h3"
+            "data_key": "swag_labs"
+        },
+        {
+            "id": "ROOT",
+            "action": "verify_text",
+            "data_key": "root"
         }
     ]
 }

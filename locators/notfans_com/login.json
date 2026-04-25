@@ -1,0 +1,146 @@
+{
+    "CAMSODA_AI": {
+        "selector": ".prm-wrapper > .prm-content-wrapper > .prm-title",
+        "type": "action"
+    },
+    "CHAT_NOW": {
+        "selector": ".prm-wrapper > .prm-content-wrapper > .prm-btn",
+        "type": "action"
+    },
+    "X": {
+        "selector": ".no-touch > .prm-wrapper > .prm-exit",
+        "type": "action"
+    },
+    "SIGN_UP": {
+        "selector": "ul > li > a",
+        "type": "action"
+    },
+    "LOGIN": {
+        "selector": "#login",
+        "type": "action"
+    },
+    "SEARCH": {
+        "selector": ".search > #search_form > .search-button",
+        "type": "action"
+    },
+    "DIV": {
+        "selector": ".container > .footer-margin > .content",
+        "type": "action"
+    },
+    "A": {
+        "selector": ".header > .logo > a",
+        "type": "action"
+    },
+    "Q": {
+        "selector": "[name=\"q\"]",
+        "type": "action"
+    },
+    "HOME": {
+        "selector": ".nav > li > a",
+        "type": "action"
+    },
+    "BUTTON": {
+        "selector": "nav > .navigation > .button",
+        "type": "action"
+    },
+    "SPAN": {
+        "selector": "a > .img > .ico-fav-1",
+        "type": "action"
+    },
+    "ITEM1": {
+        "selector": "#item1",
+        "type": "action"
+    },
+    "ITEM2": {
+        "selector": "#item2",
+        "type": "action"
+    },
+    "ITEM3": {
+        "selector": "#item3",
+        "type": "action"
+    },
+    "ITEM4": {
+        "selector": "#item4",
+        "type": "action"
+    },
+    "ITEM10": {
+        "selector": "#item10",
+        "type": "action"
+    },
+    "ITEM11": {
+        "selector": "#item11",
+        "type": "action"
+    },
+    "THEPORNDUDE": {
+        "selector": ".container > .links2 > a",
+        "type": "action"
+    },
+    "NEW_VIDEOS": {
+        "selector": "#list_videos_latest_videos_list > .headline > h1",
+        "type": "action"
+    },
+    "LIST_VIDEOS_LATEST_VIDEOS_LIST": {
+        "selector": "#list_videos_latest_videos_list",
+        "type": "action"
+    },
+    "NICKIIBABY": {
+        "selector": "#list_videos_latest_videos_list_items > .item > a",
+        "type": "action"
+    },
+    "LIST_VIDEOS_LATEST_VIDEOS_LIST_ITEMS": {
+        "selector": "#list_videos_latest_videos_list_items",
+        "type": "action"
+    },
+    "LIST_VIDEOS_LATEST_VIDEOS_LIST_PAGINATION": {
+        "selector": "#list_videos_latest_videos_list_pagination",
+        "type": "action"
+    },
+    "1": {
+        "selector": "ul > .page-current > span",
+        "type": "action"
+    },
+    "BACK": {
+        "selector": "ul > .prev > span",
+        "type": "action"
+    },
+    "FIRST": {
+        "selector": "ul > .first > span",
+        "type": "action"
+    },
+    "2": {
+        "selector": "ul > .page > a",
+        "type": "action"
+    },
+    "A_ELEMENT": {
+        "selector": "ul > .jump > a",
+        "type": "action"
+    },
+    "LAST": {
+        "selector": "ul > .last > a",
+        "type": "action"
+    },
+    "NEXT": {
+        "selector": "ul > .next > a",
+        "type": "action"
+    },
+    "ARE": {
+        "selector": ".content > .box > a",
+        "type": "action"
+    },
+    "SHOW_ALL_TAGS": {
+        "selector": ".content > .box > .all",
+        "type": "action"
+    },
+    "1969_2026": {
+        "selector": ".footer > .footer-wrap > .copyright",
+        "type": "action"
+    },
+    "NOTFANS": {
+        "selector": ".footer-wrap > .copyright > a",
+        "type": "action"
+    },
+    "NOTFANS_COM_IS_NOT_T": {
+        "selector": ".footer > .footer-wrap > .txt",
+        "type": "action"
+    }
+}

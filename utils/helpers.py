@@ -41,10 +41,13 @@ class Helpers:
         """
         if site_folder:
             domain = site_folder.replace('.', '_').replace(':', '' )
-            site_folder = re.sub(r'[\\/*?:"<>|]', "", domain)  # Chuyển đổi tên miền thành folder hợp lệ
+            site_folder = re.sub(r'[\\/*?:"<>|]', "", domain)  # Chuyển đổi tên miền thành folder 
             file_path = Config.TEST_DATA_DIR / site_folder / file_name
         else:
             file_path = Config.TEST_DATA_DIR / file_name
+
+        
+        log.warning(f"⚠️ đang tìm file tại: {file_path} ----- {file_name} --- {site_folder}")
         
         try:
             log.info(f"Đang đọc dữ liệu Excel: {file_path}")
@@ -59,7 +62,6 @@ class Helpers:
 
             log.info(f"Đọc thành công {len(data)} dòng dữ liệu.")
 
-            # ===== IN PREVIEW (KHÔNG BLOCK) =====
             
             preview = data[:max_show]
 
@@ -73,20 +75,15 @@ class Helpers:
                 print(f"... (còn {len(data) - max_show} dòng)")
 
             print("="*50 + "\n")
-            # ===================================
 
             return data
 
         except Exception as e:
             log.exception(f"Lỗi khi đọc file Excel: {e}")
             return []
-    #sua...
+
     @staticmethod
     def load_json_config(file_path):
-        """
-        Hàm mới: Đọc cấu hình JSON (Locators hoặc Templates).
-        Đây là lõi của việc chạy test không cần viết lại code.
-        """
         try:
             if not Path(file_path).exists():
                 log.error(f"Không tìm thấy file JSON: {file_path}")
@@ -96,7 +93,6 @@ class Helpers:
         except Exception as e:
             log.error(f"Lỗi khi đọc JSON {file_path}: {str(e)}")
             return None
-    #sua xong
 
     @staticmethod
     def capture_screenshot(page, name):

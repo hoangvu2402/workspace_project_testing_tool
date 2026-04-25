@@ -126,33 +126,54 @@ class AutomationLogic:
             browser.close()
             return elements
 
-    def save_configuration(self, project_path, target_url, page_id, data_rows):
+    # def save_configuration(self, project_path, target_url, page_id, data_rows):
         
+    #     p_path = Path(project_path)
+    #     site_folder_name = self.get_site_folder_name(target_url)
+
+    #     locators = {}
+    #     workflow = []
+        
+    #     for row in data_rows:
+    #         name, p_type, selector, action = row
+    #         locators[name] = {"selector": selector, "type": p_type.lower()}
+            
+    #         workflow.append({"id": name, "action": action, "data_key": name.lower()})
+
+    #     # Lưu Locators
+    #     loc_site_dir = p_path / "locators" / site_folder_name
+    #     loc_site_dir.mkdir(parents=True, exist_ok=True)
+    #     with open(loc_site_dir / f"{page_id}.json", "w", encoding="utf-8") as f:
+    #         json.dump(locators, f, indent=4, ensure_ascii=False)
+            
+    #     # Lưu Workflow
+    #     tmpl_site_dir = p_path / "templates" / site_folder_name
+    #     tmpl_site_dir.mkdir(parents=True, exist_ok=True)
+    #     with open(tmpl_site_dir / f"{page_id}_workflow.json", "w", encoding="utf-8") as f:
+    #         json.dump({"page_id": page_id, "url": target_url, "steps": workflow}, f, indent=4, ensure_ascii=False)
+        
+    #     return site_folder_name
+
+        # --- HÀM LƯU JSON MỚI --- #sửa
+    def save_locator_json(self, project_path, target_url, page_id, data): #sửa
+        """Lưu file locator JSON"""
         p_path = Path(project_path)
-        site_folder_name = self.get_site_folder_name(target_url)
-
-        locators = {}
-        workflow = []
+        site_folder = self.get_site_folder_name(target_url)
+        loc_dir = p_path / "locators" / site_folder
+        loc_dir.mkdir(parents=True, exist_ok=True)
         
-        for row in data_rows:
-            name, p_type, selector, action = row
-            locators[name] = {"selector": selector, "type": p_type.lower()}
-            
-            workflow.append({"id": name, "action": action, "data_key": name.lower()})
+        with open(loc_dir / f"{page_id}.json", "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
 
-        # Lưu Locators
-        loc_site_dir = p_path / "locators" / site_folder_name
-        loc_site_dir.mkdir(parents=True, exist_ok=True)
-        with open(loc_site_dir / f"{page_id}.json", "w", encoding="utf-8") as f:
-            json.dump(locators, f, indent=4, ensure_ascii=False)
-            
-        # Lưu Workflow
-        tmpl_site_dir = p_path / "templates" / site_folder_name
-        tmpl_site_dir.mkdir(parents=True, exist_ok=True)
-        with open(tmpl_site_dir / f"{page_id}_workflow.json", "w", encoding="utf-8") as f:
-            json.dump({"page_id": page_id, "url": target_url, "steps": workflow}, f, indent=4, ensure_ascii=False)
+    def save_template_json(self, project_path, target_url, page_id, data): #sửa
+        """Lưu file template JSON"""
+        p_path = Path(project_path)
+        site_folder = self.get_site_folder_name(target_url)
+        tmpl_dir = p_path / "templates" / site_folder
+        tmpl_dir.mkdir(parents=True, exist_ok=True)
         
-        return site_folder_name
+        with open(tmpl_dir / f"{page_id}_workflow.json", "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
 
     def import_test_data(self, project_path, target_url, source_file_path):
         """Sao chép file XLSX vào thư mục test_data của dự án"""

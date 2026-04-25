@@ -1,0 +1,1206 @@
+{
+    "page_id": "huyen-bi-gia-tuong",
+    "url": "https://thuviensach.vn/thu-vien/huyen-bi-gia-tuong/",
+    "steps": [
+        {
+            "id": "TRANG_CH",
+            "action": "verify_text",
+            "data_key": "trang_ch"
+        },
+        {
+            "id": "SEARCHRESULTDATA",
+            "action": "verify_text",
+            "data_key": "searchresultdata"
+        },
+        {
+            "id": "HEADER_MENU",
+            "action": "verify_text",
+            "data_key": "header_menu"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "DIV_FORM",
+            "action": "verify_text",
+            "data_key": "div_form"
+        },
+        {
+            "id": "KEYWORD",
+            "action": "fill",
+            "data_key": "keyword"
+        },
+        {
+            "id": "BUTTON",
+            "action": "click",
+            "data_key": "button"
+        },
+        {
+            "id": "TRANG_CH_GI_I_THI_UR",
+            "action": "verify_text",
+            "data_key": "trang_ch_gi_i_thi_ur"
+        },
+        {
+            "id": "TRANG_CH",
+            "action": "click",
+            "data_key": "trang_ch"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "G_C_SUY_NG_M",
+            "action": "click",
+            "data_key": "g_c_suy_ng_m"
+        },
+        {
+            "id": "RADIO_T_NH_Y_U",
+            "action": "click",
+            "data_key": "radio_t_nh_y_u"
+        },
+        {
+            "id": "RADIO_CHO_T_M_H_N",
+            "action": "click",
+            "data_key": "radio_cho_t_m_h_n"
+        },
+        {
+            "id": "RADIO_TRUY_N_NG_N",
+            "action": "click",
+            "data_key": "radio_truy_n_ng_n"
+        },
+        {
+            "id": "RADIO_TRUY_N_D_I_K",
+            "action": "click",
+            "data_key": "radio_truy_n_d_i_k"
+        },
+        {
+            "id": "T_N_M_N_RADIO",
+            "action": "click",
+            "data_key": "t_n_m_n_radio"
+        },
+        {
+            "id": "K_CH_TRUY_N_THANH",
+            "action": "click",
+            "data_key": "k_ch_truy_n_thanh"
+        },
+        {
+            "id": "T_M_T_T_S_CH",
+            "action": "click",
+            "data_key": "t_m_t_t_s_ch"
+        },
+        {
+            "id": "XEM_TH_M",
+            "action": "click",
+            "data_key": "xem_th_m"
+        },
+        {
+            "id": "MANGA",
+            "action": "click",
+            "data_key": "manga"
+        },
+        {
+            "id": "MANHUA",
+            "action": "click",
+            "data_key": "manhua"
+        },
+        {
+            "id": "MANHWA",
+            "action": "click",
+            "data_key": "manhwa"
+        },
+        {
+            "id": "ACTION",
+            "action": "click",
+            "data_key": "action"
+        },
+        {
+            "id": "ADVENTURE",
+            "action": "click",
+            "data_key": "adventure"
+        },
+        {
+            "id": "COMEDY",
+            "action": "click",
+            "data_key": "comedy"
+        },
+        {
+            "id": "FANTASY",
+            "action": "click",
+            "data_key": "fantasy"
+        },
+        {
+            "id": "SHOUNEN",
+            "action": "click",
+            "data_key": "shounen"
+        },
+        {
+            "id": "SHOUJO",
+            "action": "click",
+            "data_key": "shoujo"
+        },
+        {
+            "id": "SUPERNATURAL",
+            "action": "click",
+            "data_key": "supernatural"
+        },
+        {
+            "id": "XEM_TH_M",
+            "action": "click",
+            "data_key": "xem_th_m"
+        },
+        {
+            "id": "T_I_LI_U_KHOA_H_C",
+            "action": "click",
+            "data_key": "t_i_li_u_khoa_h_c"
+        },
+        {
+            "id": "T_M_LINH_T_NH_TH_C",
+            "action": "click",
+            "data_key": "t_m_linh_t_nh_th_c"
+        },
+        {
+            "id": "KH_M_PH_TH_GI_I",
+            "action": "click",
+            "data_key": "kh_m_ph_th_gi_i"
+        },
+        {
+            "id": "HO_T_H_NH_ANIME",
+            "action": "click",
+            "data_key": "ho_t_h_nh_anime"
+        },
+        {
+            "id": "V_THU_T_H_NH_NG",
+            "action": "click",
+            "data_key": "v_thu_t_h_nh_ng"
+        },
+        {
+            "id": "H_NH_S_TRINH_TH_M",
+            "action": "click",
+            "data_key": "h_nh_s_trinh_th_m"
+        },
+        {
+            "id": "T_M_L_T_NH_C_M",
+            "action": "click",
+            "data_key": "t_m_l_t_nh_c_m"
+        },
+        {
+            "id": "PHI_U_L_U_SINH_T_N",
+            "action": "click",
+            "data_key": "phi_u_l_u_sinh_t_n"
+        },
+        {
+            "id": "KHOA_H_C_GI_T_NG",
+            "action": "click",
+            "data_key": "khoa_h_c_gi_t_ng"
+        },
+        {
+            "id": "CHI_N_TRANH_L_CH_S",
+            "action": "click",
+            "data_key": "chi_n_tranh_l_ch_s"
+        },
+        {
+            "id": "XEM_TH_M",
+            "action": "click",
+            "data_key": "xem_th_m"
+        },
+        {
+            "id": "T_M_L_K_N_NG",
+            "action": "click",
+            "data_key": "t_m_l_k_n_ng"
+        },
+        {
+            "id": "T_N_GI_O_T_M_LINH",
+            "action": "click",
+            "data_key": "t_n_gi_o_t_m_linh"
+        },
+        {
+            "id": "KHOA_H_C_C_NG_NGH",
+            "action": "click",
+            "data_key": "khoa_h_c_c_ng_ngh"
+        },
+        {
+            "id": "KI_N_TR_C_X_Y_D_NG",
+            "action": "click",
+            "data_key": "ki_n_tr_c_x_y_d_ng"
+        },
+        {
+            "id": "N_NG_L_M_NG",
+            "action": "click",
+            "data_key": "n_ng_l_m_ng"
+        },
+        {
+            "id": "Y_H_C_S_C_KH_E",
+            "action": "click",
+            "data_key": "y_h_c_s_c_kh_e"
+        },
+        {
+            "id": "L_CH_S_QU_N_S",
+            "action": "click",
+            "data_key": "l_ch_s_qu_n_s"
+        },
+        {
+            "id": "NH_N_V_T_L_CH_S",
+            "action": "click",
+            "data_key": "nh_n_v_t_l_ch_s"
+        },
+        {
+            "id": "H_I_K_T_Y_B_T",
+            "action": "click",
+            "data_key": "h_i_k_t_y_b_t"
+        },
+        {
+            "id": "QU_N_TR_KINH_DOAN",
+            "action": "click",
+            "data_key": "qu_n_tr_kinh_doan"
+        },
+        {
+            "id": "XEM_TH_M",
+            "action": "click",
+            "data_key": "xem_th_m"
+        },
+        {
+            "id": "T_M_KI_M_N_NG_CAOREV",
+            "action": "verify_text",
+            "data_key": "t_m_ki_m_n_ng_caorev"
+        },
+        {
+            "id": "T_M_KI_M_N_NG_CAO",
+            "action": "click",
+            "data_key": "t_m_ki_m_n_ng_cao"
+        },
+        {
+            "id": "PAGE",
+            "action": "verify_text",
+            "data_key": "page"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "CONTENT",
+            "action": "verify_text",
+            "data_key": "content"
+        },
+        {
+            "id": "TRANG_CH",
+            "action": "verify_text",
+            "data_key": "trang_ch"
+        },
+        {
+            "id": "TRANG_CH",
+            "action": "verify_text",
+            "data_key": "trang_ch"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "TRANG_CH",
+            "action": "verify_text",
+            "data_key": "trang_ch"
+        },
+        {
+            "id": "TRANG_CH",
+            "action": "verify_text",
+            "data_key": "trang_ch"
+        },
+        {
+            "id": "TRANG_CH",
+            "action": "verify_text",
+            "data_key": "trang_ch"
+        },
+        {
+            "id": "TRANG_CH",
+            "action": "verify_text",
+            "data_key": "trang_ch"
+        },
+        {
+            "id": "TRANG_CH",
+            "action": "click",
+            "data_key": "trang_ch"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "TH_VI_N",
+            "action": "verify_text",
+            "data_key": "th_vi_n"
+        },
+        {
+            "id": "TH_VI_N",
+            "action": "click",
+            "data_key": "th_vi_n"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "S_CH_N_I_22_52_10",
+            "action": "verify_text",
+            "data_key": "s_ch_n_i_22_52_10"
+        },
+        {
+            "id": "S_CH_N_I_22_52_10",
+            "action": "verify_text",
+            "data_key": "s_ch_n_i_22_52_10"
+        },
+        {
+            "id": "PRIMARY",
+            "action": "verify_text",
+            "data_key": "primary"
+        },
+        {
+            "id": "WOO_PRIMARY",
+            "action": "verify_text",
+            "data_key": "woo_primary"
+        },
+        {
+            "id": "WOO_MAIN",
+            "action": "verify_text",
+            "data_key": "woo_main"
+        },
+        {
+            "id": "S_CH_N_I_22_52_10",
+            "action": "verify_text",
+            "data_key": "s_ch_n_i_22_52_10"
+        },
+        {
+            "id": "S_CH_N_I_22_52_10",
+            "action": "verify_text",
+            "data_key": "s_ch_n_i_22_52_10"
+        },
+        {
+            "id": "S_CH_N_I_22_52_10",
+            "action": "verify_text",
+            "data_key": "s_ch_n_i_22_52_10"
+        },
+        {
+            "id": "S_CH_N_I_22_52_10",
+            "action": "verify_text",
+            "data_key": "s_ch_n_i_22_52_10"
+        },
+        {
+            "id": "S_CH_N_I_22_52_10",
+            "action": "click",
+            "data_key": "s_ch_n_i_22_52_10"
+        },
+        {
+            "id": "S_CH_N_I_22_52_10",
+            "action": "verify_text",
+            "data_key": "s_ch_n_i_22_52_10"
+        },
+        {
+            "id": "CH_A_T_NH_NG_CHI_C",
+            "action": "verify_text",
+            "data_key": "ch_a_t_nh_ng_chi_c"
+        },
+        {
+            "id": "CH_A_T_NH_NG_CHI_C",
+            "action": "verify_text",
+            "data_key": "ch_a_t_nh_ng_chi_c"
+        },
+        {
+            "id": "CH_A_T_NH_NG_CHI_C",
+            "action": "click",
+            "data_key": "ch_a_t_nh_ng_chi_c"
+        },
+        {
+            "id": "S_CH_N_I_23_28_21",
+            "action": "verify_text",
+            "data_key": "s_ch_n_i_23_28_21"
+        },
+        {
+            "id": "P",
+            "action": "verify_text",
+            "data_key": "p"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "TRANG_1_10_1_2_3_4_5",
+            "action": "verify_text",
+            "data_key": "trang_1_10_1_2_3_4_5"
+        },
+        {
+            "id": "TRANG_1_10",
+            "action": "verify_text",
+            "data_key": "trang_1_10"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "1",
+            "action": "click",
+            "data_key": "1"
+        },
+        {
+            "id": "2",
+            "action": "verify_text",
+            "data_key": "2"
+        },
+        {
+            "id": "2",
+            "action": "click",
+            "data_key": "2"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "HUY_N_B_GI_T_NG",
+            "action": "verify_text",
+            "data_key": "huy_n_b_gi_t_ng"
+        },
+        {
+            "id": "CATE",
+            "action": "verify_text",
+            "data_key": "cate"
+        },
+        {
+            "id": "CATE1",
+            "action": "verify_text",
+            "data_key": "cate1"
+        },
+        {
+            "id": "CATE2",
+            "action": "verify_text",
+            "data_key": "cate2"
+        },
+        {
+            "id": "CATE3",
+            "action": "verify_text",
+            "data_key": "cate3"
+        },
+        {
+            "id": "193_CH_A_T_NH_NG",
+            "action": "verify_text",
+            "data_key": "193_ch_a_t_nh_ng"
+        },
+        {
+            "id": "SUB1",
+            "action": "verify_text",
+            "data_key": "sub1"
+        },
+        {
+            "id": "CH_A_T_NH_NG_CHI_C",
+            "action": "click",
+            "data_key": "ch_a_t_nh_ng_chi_c"
+        },
+        {
+            "id": "SUB2",
+            "action": "verify_text",
+            "data_key": "sub2"
+        },
+        {
+            "id": "SUB3",
+            "action": "verify_text",
+            "data_key": "sub3"
+        },
+        {
+            "id": "SIDEBAR_PRIMARY",
+            "action": "verify_text",
+            "data_key": "sidebar_primary"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "DANH_M_C",
+            "action": "verify_text",
+            "data_key": "danh_m_c"
+        },
+        {
+            "id": "GI_I_THI_U",
+            "action": "click",
+            "data_key": "gi_i_thi_u"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "G_C_SUY_NG_M",
+            "action": "click",
+            "data_key": "g_c_suy_ng_m"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "MANGA",
+            "action": "click",
+            "data_key": "manga"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "T_M_L_K_N_NG",
+            "action": "click",
+            "data_key": "t_m_l_k_n_ng"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "T_I_LI_U_KHOA_H_C",
+            "action": "click",
+            "data_key": "t_i_li_u_khoa_h_c"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "POP_BALLAD",
+            "action": "click",
+            "data_key": "pop_ballad"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "TH_VI_N",
+            "action": "click",
+            "data_key": "th_vi_n"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "T_M_L_K_N_NG",
+            "action": "click",
+            "data_key": "t_m_l_k_n_ng"
+        },
+        {
+            "id": "HUY_N_B_GI_T_NG",
+            "action": "click",
+            "data_key": "huy_n_b_gi_t_ng"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "NH_N_SINH_C_M_NG",
+            "action": "click",
+            "data_key": "nh_n_sinh_c_m_ng"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "SPAN",
+            "action": "verify_text",
+            "data_key": "span"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "B_NH_LU_N_M_I",
+            "action": "verify_text",
+            "data_key": "b_nh_lu_n_m_i"
+        },
+        {
+            "id": "HOA_TH_M_KI_U_H_NH",
+            "action": "verify_text",
+            "data_key": "hoa_th_m_ki_u_h_nh"
+        },
+        {
+            "id": "HOA_TH_M_KI_U_H_NH",
+            "action": "click",
+            "data_key": "hoa_th_m_ki_u_h_nh"
+        },
+        {
+            "id": "DIV",
+            "action": "verify_text",
+            "data_key": "div"
+        },
+        {
+            "id": "JOKEZ",
+            "action": "verify_text",
+            "data_key": "jokez"
+        },
+        {
+            "id": "JOKEZ",
+            "action": "verify_text",
+            "data_key": "jokez"
+        },
+        {
+            "id": "TUE_21_04_2026",
+            "action": "verify_text",
+            "data_key": "tue_21_04_2026"
+        },
+        {
+            "id": "L_U_QU_TR_I_CHAP_18",
+            "action": "verify_text",
+            "data_key": "l_u_qu_tr_i_chap_18"
+        },
+        {
+            "id": "XEM_TH_M",
+            "action": "verify_text",
+            "data_key": "xem_th_m"
+        },
+        {
+            "id": "XEM_TH_M",
+            "action": "click",
+            "data_key": "xem_th_m"
+        },
+        {
+            "id": "C_NG_CHUY_N_M_C",
+            "action": "verify_text",
+            "data_key": "c_ng_chuy_n_m_c"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "PDF_63_TRANG",
+            "action": "verify_text",
+            "data_key": "pdf_63_trang"
+        },
+        {
+            "id": "C_X_Y_D_NG_NH_M_M",
+            "action": "verify_text",
+            "data_key": "c_x_y_d_ng_nh_m_m"
+        },
+        {
+            "id": "C_X_Y_D_NG_NH_M_M",
+            "action": "verify_text",
+            "data_key": "c_x_y_d_ng_nh_m_m"
+        },
+        {
+            "id": "FOOTER_AREA",
+            "action": "verify_text",
+            "data_key": "footer_area"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "C_X_Y_D_NG_NH_M_M",
+            "action": "verify_text",
+            "data_key": "c_x_y_d_ng_nh_m_m"
+        },
+        {
+            "id": "THUVIENSACH_VN",
+            "action": "click",
+            "data_key": "thuviensach_vn"
+        },
+        {
+            "id": "NG_H_DONATE",
+            "action": "verify_text",
+            "data_key": "ng_h_donate"
+        },
+        {
+            "id": "M_I_S_NG_G_P_H",
+            "action": "verify_text",
+            "data_key": "m_i_s_ng_g_p_h"
+        },
+        {
+            "id": "PAYPAL_ME_KHOAHOCTAM",
+            "action": "click",
+            "data_key": "paypal_me_khoahoctam"
+        },
+        {
+            "id": "A",
+            "action": "click",
+            "data_key": "a"
+        },
+        {
+            "id": "THUVIENSACH_VN_202",
+            "action": "verify_text",
+            "data_key": "thuviensach_vn_202"
+        }
+    ]
+}
