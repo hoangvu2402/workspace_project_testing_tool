@@ -1,0 +1,59 @@
+{
+    "workflow_id": "login_to_inventory",
+    "type": "e2e",
+    "description": "Dang nhap va kiem tra trang san pham",
+    "start_url": "https://www.saucedemo.com/",
+    "pages": ["login", "inventory"],
+    "steps": [
+        {
+            "page_id": "login",
+            "id": "USER_NAME",
+            "action": "fill",
+            "data_key": "username"
+        },
+        {
+            "page_id": "login",
+            "id": "PASSWORD",
+            "action": "fill_password",
+            "data_key": "password"
+        },
+        {
+            "page_id": "login",
+            "id": "LOGIN_BUTTON",
+            "action": "click"
+        },
+        {
+            "page_id": "inventory",
+            "id": "TITLE",
+            "action": "verify_text",
+            "data_key": "expected_title"
+        },
+        {
+            "page_id": "inventory",
+            "id": "INVENTORY_LIST",
+            "action": "verify_visible"
+        },
+        {
+            "page_id": "inventory",
+            "id": "INVENTORY_ITEM_1",
+            "action": "verify_text",
+            "data_key": "expected_first_product"
+        },
+        {
+            "page_id": "inventory",
+            "action": "verify_url",
+            "value": "inventory.html"
+        },
+        {
+            "page_id": "inventory",
+            "id": "ADD_TO_CART_BACKPACK",
+            "action": "click"
+        },
+        {
+            "page_id": "inventory",
+            "id": "CART_BADGE",
+            "action": "verify_text",
+            "data_key": "expected_cart_count"
+        }
+    ]
+}

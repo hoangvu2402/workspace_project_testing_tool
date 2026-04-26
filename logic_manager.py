@@ -199,12 +199,25 @@ class AutomationLogic:
         return [f.name for f in data_dir.glob("*.xlsx")]
 
     def get_template_files(self, project_path):
-        """List all template workflow JSON files across all sites."""
+        """List all template workflow JSON files across all sites (excludes E2E)."""
         p_path = Path(project_path) / "templates"
         if not p_path.exists():
             return []
         results = []
         for f in sorted(p_path.rglob("*_workflow.json")):
+            if f.name.startswith("e2e_"):
+                continue
+            rel = f.relative_to(p_path)
+            results.append(str(rel))
+        return results
+
+    def get_e2e_workflow_files(self, project_path):
+        """List all E2E workflow JSON files across all sites."""
+        p_path = Path(project_path) / "templates"
+        if not p_path.exists():
+            return []
+        results = []
+        for f in sorted(p_path.rglob("e2e_*.json")):
             rel = f.relative_to(p_path)
             results.append(str(rel))
         return results

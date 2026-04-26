@@ -16,7 +16,7 @@ class TestRunnerPanel(ttk.Frame):
         super().__init__(parent, padding=10)
         self.logic = logic
         self.shared = shared_vars
-        self._queue_items = []  # list of dicts: {template, data, sheet, page_id}
+        self._queue_items = []  # list of dicts: {template, data, sheet, page_id, url, mode}
         self._is_running = False
 
         self._build_config_section()
@@ -47,12 +47,18 @@ class TestRunnerPanel(ttk.Frame):
         add_frame = ttk.LabelFrame(self, text=" 2. Chon Template & Du lieu ", padding=10)
         add_frame.pack(fill="x", pady=5)
 
-        # Row 0: test file
-        ttk.Label(add_frame, text="File test:").grid(row=0, column=0, sticky="w")
-        self.test_combo = ttk.Combobox(add_frame, width=35)
-        self.test_combo.grid(row=0, column=1, padx=5, sticky="w")
+        # Row 0: test mode selector
+        ttk.Label(add_frame, text="Che do:").grid(row=0, column=0, sticky="w")
+        mode_frame = ttk.Frame(add_frame)
+        mode_frame.grid(row=0, column=1, padx=5, sticky="w", columnspan=3)
 
-        # Row 1: template
+        self.mode_var = tk.StringVar(value="single")
+        ttk.Radiobutton(mode_frame, text="Don trang", variable=self.mode_var,
+                        value="single", command=self._on_mode_changed).pack(side="left", padx=(0, 15))
+        ttk.Radiobutton(mode_frame, text="E2E (Da trang)", variable=self.mode_var,
+                        value="e2e", command=self._on_mode_changed).pack(side="left")
+
+        # Row 1: template / e2e workflow
         ttk.Label(add_frame, text="Template:").grid(row=1, column=0, sticky="w", pady=5)
         self.template_combo = ttk.Combobox(add_frame, width=45)
         self.template_combo.grid(row=1, column=1, padx=5, sticky="w", columnspan=2)
@@ -86,9 +92,10 @@ class TestRunnerPanel(ttk.Frame):
         q_frame.pack(fill="x", pady=5)
 
         # Queue treeview
-        columns = ("STT", "Template", "Data", "Sheet", "PageID", "URL")
+        columns = ("STT", "Loai", "Template", "Data", "Sheet", "PageID", "URL")
         self.queue_tree = ttk.Treeview(q_frame, columns=columns, show="headings", height=6)
         self.queue_tree.heading("STT", text="#")
+        self.queue_tree.heading("Loai", text="Loai")
         self.queue_tree.heading("Template", text="Template")
         self.queue_tree.heading("Data", text="Du lieu")
         self.queue_tree.heading("Sheet", text="Sheet")
@@ -96,11 +103,12 @@ class TestRunnerPanel(ttk.Frame):
         self.queue_tree.heading("URL", text="URL")
 
         self.queue_tree.column("STT", width=30)
-        self.queue_tree.column("Template", width=200)
-        self.queue_tree.column("Data", width=150)
-        self.queue_tree.column("Sheet", width=60)
-        self.queue_tree.column("PageID", width=80)
-        self.queue_tree.column("URL", width=200)
+        self.queue_tree.column("Loai", width=55)
+        self.queue_tree.column("Template", width=180)
+        self.queue_tree.column("Data", width=140)
+        self.queue_tree.column("Sheet", width=55)
+        self.queue_tree.column("PageID", width=75)
+        self.queue_tree.column("URL", width=180)
 
         self.queue_tree.pack(fill="x", side="top")
 
@@ -134,6 +142,14 @@ class TestRunnerPanel(ttk.Frame):
         self.log_text.pack(fill="both", expand=True)
 
     # ------------------------------------------------------------------
+    # Mode switching
+    # ------------------------------------------------------------------
+
+    def _on_mode_changed(self):
+        """Refresh template list when mode changes between single-page and E2E."""
+        self._refresh_template_list()
+
+    # ------------------------------------------------------------------
     # Template / data selection
     # ------------------------------------------------------------------
 
@@ -145,7 +161,7 @@ class TestRunnerPanel(ttk.Frame):
         proj = self.shared["project_path"].get()
         info = self.logic.get_template_info(proj, template_rel)
         if info:
-            url = info.get("url", "")
+            url = info.get("url") or info.get("start_url", "")
             page_id = info.get("page_id", "")
             if url:
                 self.shared["url_path"].set(url)
@@ -171,6 +187,7 @@ class TestRunnerPanel(ttk.Frame):
         template = self.template_combo.get()
         data = self.data_combo.get()
         sheet = self.sheet_var.get()
+        mode = self.mode_var.get()
 
         if not template:
             messagebox.showwarning("Chu y", "Vui long chon template")
@@ -178,8 +195,13 @@ class TestRunnerPanel(ttk.Frame):
 
         proj = self.shared["project_path"].get()
         info = self.logic.get_template_info(proj, template)
-        page_id = info.get("page_id", "") if info else ""
-        url = info.get("url", "") if info else ""
+
+        if mode == "e2e":
+            page_id = ", ".join(info.get("pages", [])) if info else ""
+            url = info.get("start_url", "") if info else ""
+        else:
+            page_id = info.get("page_id", "") if info else ""
+            url = info.get("url", "") if info else ""
 
         item = {
             "template": template,
@@ -187,20 +209,24 @@ class TestRunnerPanel(ttk.Frame):
             "sheet": sheet,
             "page_id": page_id,
             "url": url,
+            "mode": mode,
         }
         self._queue_items.append(item)
         self._refresh_queue_tree()
-        self._append_log(f"Da them: {template} + {data}")
+        mode_label = "E2E" if mode == "e2e" else "Don trang"
+        self._append_log(f"Da them [{mode_label}]: {template} + {data}")
 
     def _refresh_queue_tree(self):
         for child in self.queue_tree.get_children():
             self.queue_tree.delete(child)
         for i, item in enumerate(self._queue_items, 1):
+            mode_label = "E2E" if item.get("mode") == "e2e" else "Don trang"
             self.queue_tree.insert(
                 "",
                 "end",
                 values=(
                     i,
+                    mode_label,
                     item["template"],
                     item["data"],
                     item["sheet"],
@@ -277,11 +303,6 @@ class TestRunnerPanel(ttk.Frame):
             messagebox.showwarning("Chu y", "Dang chay test, vui long doi.")
             return
 
-        test_file = self.test_combo.get()
-        if not test_file:
-            messagebox.showwarning("Chu y", "Vui long chon file test")
-            return
-
         self._is_running = True
         self.run_btn.config(state="disabled")
         self.run_single_btn.config(state="disabled")
@@ -297,16 +318,26 @@ class TestRunnerPanel(ttk.Frame):
                 sheet = item["sheet"]
                 page_id = item["page_id"]
                 url = item["url"]
+                mode = item.get("mode", "single")
 
+                mode_label = "E2E" if mode == "e2e" else "Don trang"
                 self.after(
                     0,
-                    lambda t=template, n=i: self._append_log(
-                        f"{'='*50}\n[{n}/{total}] Dang chay: {t}\n{'='*50}"
+                    lambda t=template, n=i, ml=mode_label: self._append_log(
+                        f"{'='*50}\n[{n}/{total}] [{ml}] Dang chay: {t}\n{'='*50}"
                     ),
                 )
 
                 python_exe = sys.executable
                 proj_path = self.shared["project_path"].get()
+
+                # Choose test file and env vars based on mode
+                if mode == "e2e":
+                    test_file = "tests/test_e2e.py"
+                    workflow_path = str(Path(proj_path) / "templates" / template)
+                else:
+                    test_file = "tests/test_main.py"
+                    workflow_path = ""
 
                 cmd = [python_exe, "-m", "pytest", test_file, "-v", "-s"]
 
@@ -318,6 +349,9 @@ class TestRunnerPanel(ttk.Frame):
                 env["PAGE_ID"] = page_id
                 env["BROWSER"] = self.shared["browser_var"].get()
                 env.update({"PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"})
+
+                if mode == "e2e":
+                    env["E2E_WORKFLOW"] = workflow_path
 
                 try:
                     process = subprocess.Popen(
@@ -396,17 +430,20 @@ class TestRunnerPanel(ttk.Frame):
                 str(f.relative_to(self.shared["project_path"].get()))
                 for f in p.glob("test_*.py")
             ]
-            self.test_combo["values"] = tests
-            if tests:
-                self.test_combo.set(tests[0])
 
     def _refresh_template_list(self):
         proj = self.shared["project_path"].get()
-        templates = self.logic.get_template_files(proj)
+        mode = self.mode_var.get()
+        if mode == "e2e":
+            templates = self.logic.get_e2e_workflow_files(proj)
+        else:
+            templates = self.logic.get_template_files(proj)
         self.template_combo["values"] = templates
         if templates:
             self.template_combo.set(templates[0])
             self._on_template_selected()
+        else:
+            self.template_combo.set("")
 
     def _refresh_data_list(self):
         proj = self.shared["project_path"].get()

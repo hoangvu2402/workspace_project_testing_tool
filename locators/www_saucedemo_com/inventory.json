@@ -1,0 +1,42 @@
+{
+    "TITLE": {
+        "selector": ".title",
+        "type": "info",
+        "name": "Products title"
+    },
+    "INVENTORY_LIST": {
+        "selector": ".inventory_list",
+        "type": "info",
+        "name": "Product list container"
+    },
+    "SHOPPING_CART": {
+        "selector": ".shopping_cart_link",
+        "type": "action",
+        "name": "Cart icon"
+    },
+    "BURGER_MENU": {
+        "selector": "#react-burger-menu-btn",
+        "type": "action",
+        "name": "Menu button"
+    },
+    "PRODUCT_SORT": {
+        "selector": "[data-test=\"product-sort-container\"]",
+        "type": "action",
+        "name": "Sort dropdown"
+    },
+    "INVENTORY_ITEM_1": {
+        "selector": ".inventory_item:first-child .inventory_item_name",
+        "type": "info",
+        "name": "First product name"
+    },
+    "ADD_TO_CART_BACKPACK": {
+        "selector": "#add-to-cart-sauce-labs-backpack",
+        "type": "action",
+        "name": "Add Backpack to cart"
+    },
+    "CART_BADGE": {
+        "selector": ".shopping_cart_badge",
+        "type": "info",
+        "name": "Cart badge count"
+    }
+}
