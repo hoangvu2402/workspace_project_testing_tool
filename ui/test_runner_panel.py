@@ -4,6 +4,7 @@ import threading
 import subprocess
 import sys
 import os
+import json
 import traceback
 from pathlib import Path
 from logic_manager import AutomationLogic
@@ -86,6 +87,8 @@ class TestRunnerPanel(ttk.Frame):
         ttk.Button(btn_frame, text="Lam moi danh sach", command=self._refresh_all).pack(
             side="left", padx=5
         )
+        self.merge_btn = ttk.Button(btn_frame, text="Gop Template (E2E)", command=self._open_merge_dialog)
+        self.merge_btn.pack(side="left", padx=5)
 
     def _build_queue_section(self):
         q_frame = ttk.LabelFrame(self, text=" 3. Hang doi thuc thi ", padding=10)
@@ -458,3 +461,174 @@ class TestRunnerPanel(ttk.Frame):
     def _append_log(self, message):
         self.log_text.insert(tk.END, message + "\n")
         self.log_text.see(tk.END)
+
+    # ------------------------------------------------------------------
+    # Merge templates dialog
+    # ------------------------------------------------------------------
+
+    def _open_merge_dialog(self):
+        """Open a dialog to merge multiple single-page templates into one E2E workflow."""
+        proj = self.shared["project_path"].get()
+        templates = self.logic.get_template_files(proj)
+        if len(templates) < 2:
+            messagebox.showwarning("Chu y", "Can it nhat 2 template don trang de gop.")
+            return
+        MergeTemplateDialog(self, self.logic, proj, templates, self._on_merge_complete)
+
+    def _on_merge_complete(self, saved_path):
+        """Callback after merge dialog saves a file."""
+        self._append_log(f"Da tao E2E workflow: {saved_path}")
+        self.mode_var.set("e2e")
+        self._on_mode_changed()
+
+
+class MergeTemplateDialog(tk.Toplevel):
+    """Dialog for merging single-page templates into an E2E workflow."""
+
+    def __init__(self, parent, logic: AutomationLogic, project_path: str,
+                 templates: list, on_complete=None):
+        super().__init__(parent)
+        self.logic = logic
+        self.project_path = project_path
+        self.all_templates = templates
+        self.on_complete = on_complete
+        self._selected = []  # ordered list of selected template paths
+        self._merged_data = None
+
+        self.title("Gop Template thanh E2E Workflow")
+        self.geometry("750x600")
+        self.transient(parent)
+        self.grab_set()
+
+        self._build_ui()
+
+    def _build_ui(self):
+        # --- Top: template selection ---
+        sel_frame = ttk.LabelFrame(self, text=" 1. Chon template don trang (theo thu tu) ", padding=10)
+        sel_frame.pack(fill="x", padx=10, pady=5)
+
+        left = ttk.Frame(sel_frame)
+        left.pack(side="left", fill="both", expand=True)
+
+        ttk.Label(left, text="Template co san:").pack(anchor="w")
+        self.available_listbox = tk.Listbox(left, height=6, selectmode="extended")
+        self.available_listbox.pack(fill="x", padx=(0, 5))
+        for t in self.all_templates:
+            self.available_listbox.insert(tk.END, t)
+
+        mid = ttk.Frame(sel_frame)
+        mid.pack(side="left", padx=5)
+        ttk.Button(mid, text="Them >>", command=self._add_selected).pack(pady=2)
+        ttk.Button(mid, text="<< Xoa", command=self._remove_selected).pack(pady=2)
+        ttk.Button(mid, text="Len", command=self._move_up).pack(pady=2)
+        ttk.Button(mid, text="Xuong", command=self._move_down).pack(pady=2)
+
+        right = ttk.Frame(sel_frame)
+        right.pack(side="left", fill="both", expand=True)
+
+        ttk.Label(right, text="Thu tu gop (tren -> duoi):").pack(anchor="w")
+        self.selected_listbox = tk.Listbox(right, height=6)
+        self.selected_listbox.pack(fill="x", padx=(5, 0))
+
+        # --- Middle: workflow metadata ---
+        meta_frame = ttk.LabelFrame(self, text=" 2. Thong tin E2E Workflow ", padding=10)
+        meta_frame.pack(fill="x", padx=10, pady=5)
+
+        ttk.Label(meta_frame, text="Workflow ID:").grid(row=0, column=0, sticky="w")
+        self.wf_id_var = tk.StringVar()
+        ttk.Entry(meta_frame, textvariable=self.wf_id_var, width=40).grid(row=0, column=1, padx=5, sticky="w")
+        ttk.Label(meta_frame, text="(de trong = tu dong)").grid(row=0, column=2, sticky="w")
+
+        ttk.Label(meta_frame, text="Mo ta:").grid(row=1, column=0, sticky="w", pady=5)
+        self.desc_var = tk.StringVar()
+        ttk.Entry(meta_frame, textvariable=self.desc_var, width=55).grid(row=1, column=1, padx=5, sticky="w", columnspan=2)
+
+        # --- Preview + buttons ---
+        prev_frame = ttk.LabelFrame(self, text=" 3. Xem truoc ket qua ", padding=10)
+        prev_frame.pack(fill="both", expand=True, padx=10, pady=5)
+
+        btn_row = ttk.Frame(prev_frame)
+        btn_row.pack(fill="x")
+        ttk.Button(btn_row, text="Xem truoc", command=self._preview).pack(side="left", padx=3)
+        ttk.Button(btn_row, text="Luu E2E Workflow", command=self._save).pack(side="left", padx=3)
+        ttk.Button(btn_row, text="Dong", command=self.destroy).pack(side="right", padx=3)
+
+        self.preview_text = tk.Text(prev_frame, height=12, bg="#1e1e1e", fg="#d4d4d4",
+                                    font=("Consolas", 10))
+        self.preview_text.pack(fill="both", expand=True, pady=(5, 0))
+
+    # --- Selection management ---
+
+    def _add_selected(self):
+        indices = self.available_listbox.curselection()
+        for i in indices:
+            tpl = self.available_listbox.get(i)
+            if tpl not in self._selected:
+                self._selected.append(tpl)
+        self._refresh_selected_list()
+
+    def _remove_selected(self):
+        indices = self.selected_listbox.curselection()
+        to_remove = [self.selected_listbox.get(i) for i in indices]
+        self._selected = [s for s in self._selected if s not in to_remove]
+        self._refresh_selected_list()
+
+    def _move_up(self):
+        sel = self.selected_listbox.curselection()
+        if not sel or sel[0] == 0:
+            return
+        idx = sel[0]
+        self._selected[idx], self._selected[idx - 1] = self._selected[idx - 1], self._selected[idx]
+        self._refresh_selected_list()
+        self.selected_listbox.selection_set(idx - 1)
+
+    def _move_down(self):
+        sel = self.selected_listbox.curselection()
+        if not sel or sel[0] >= len(self._selected) - 1:
+            return
+        idx = sel[0]
+        self._selected[idx], self._selected[idx + 1] = self._selected[idx + 1], self._selected[idx]
+        self._refresh_selected_list()
+        self.selected_listbox.selection_set(idx + 1)
+
+    def _refresh_selected_list(self):
+        self.selected_listbox.delete(0, tk.END)
+        for t in self._selected:
+            self.selected_listbox.insert(tk.END, t)
+
+    # --- Preview & save ---
+
+    def _preview(self):
+        if len(self._selected) < 2:
+            messagebox.showwarning("Chu y", "Vui long chon it nhat 2 template.")
+            return
+        self._merged_data = self.logic.merge_templates_to_e2e(
+            self.project_path,
+            self._selected,
+            workflow_id=self.wf_id_var.get().strip(),
+            description=self.desc_var.get().strip(),
+        )
+        self.preview_text.delete("1.0", tk.END)
+        self.preview_text.insert("1.0", json.dumps(self._merged_data, indent=4, ensure_ascii=False))
+
+    def _save(self):
+        if not self._merged_data:
+            self._preview()
+        if not self._merged_data or not self._merged_data.get("pages"):
+            messagebox.showerror("Loi", "Khong co du lieu de luu. Vui long xem truoc truoc.")
+            return
+
+        # Determine site folder from first template path
+        first_tpl = self._selected[0]
+        site_folder = str(Path(first_tpl).parent)
+
+        wf_id = self._merged_data.get("workflow_id", "merged")
+        filename = f"e2e_{wf_id}.json"
+
+        saved = self.logic.save_e2e_workflow(
+            self.project_path, site_folder, filename, self._merged_data
+        )
+        messagebox.showinfo("Thanh cong", f"Da luu E2E workflow:\n{saved}")
+        if self.on_complete:
+            self.on_complete(saved)
+        self.destroy()

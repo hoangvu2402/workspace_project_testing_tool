@@ -241,6 +241,62 @@ class AutomationLogic:
         with open(full_path, "r", encoding="utf-8") as f:
             return json.load(f)
 
+    def merge_templates_to_e2e(self, project_path, template_paths, workflow_id="", description=""):
+        """Merge multiple single-page templates into one E2E workflow.
+
+        Args:
+            project_path: Root project directory.
+            template_paths: List of relative template paths (under templates/).
+            workflow_id: Optional ID for the workflow; auto-generated if empty.
+            description: Optional description.
+
+        Returns:
+            dict with the merged E2E workflow JSON.
+        """
+        all_pages = []
+        all_steps = []
+        start_url = ""
+
+        for tpl_rel in template_paths:
+            info = self.get_template_info(project_path, tpl_rel)
+            if not info:
+                continue
+
+            page_id = info.get("page_id", Path(tpl_rel).stem.replace("_workflow", ""))
+            url = info.get("url", "")
+
+            if not start_url:
+                start_url = url
+
+            if page_id not in all_pages:
+                all_pages.append(page_id)
+
+            for step in info.get("steps", []):
+                merged_step = dict(step)
+                merged_step["page_id"] = page_id
+                all_steps.append(merged_step)
+
+        if not workflow_id:
+            workflow_id = "_to_".join(all_pages)
+
+        return {
+            "workflow_id": workflow_id,
+            "type": "e2e",
+            "description": description or f"E2E: {' -> '.join(all_pages)}",
+            "start_url": start_url,
+            "pages": all_pages,
+            "steps": all_steps,
+        }
+
+    def save_e2e_workflow(self, project_path, site_folder, filename, data):
+        """Save an E2E workflow JSON file."""
+        p_path = Path(project_path) / "templates" / site_folder
+        p_path.mkdir(parents=True, exist_ok=True)
+        filepath = p_path / filename
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+        return str(filepath)
+
     def get_pytest_command(self, test_file):
         """Tạo lệnh chạy pytest"""
         return [sys.executable, "-m", "pytest", test_file, "-v", "-s", "--tb=no"]
