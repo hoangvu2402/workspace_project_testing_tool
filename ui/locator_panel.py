@@ -11,12 +11,31 @@ class LocatorPanel(ttk.Frame):
     Supports multi-page scanning: add unlimited URL + Page ID pairs and scan all sequentially."""
 
     def __init__(self, parent, logic: AutomationLogic, shared_vars: dict):
-        super().__init__(parent, padding=10)
+        super().__init__(parent, padding=0)
         self.logic = logic
         self.shared = shared_vars
         self._scan_pages = []  # list of dicts: {url, page_id}
         self._scan_results = {}  # page_id -> list of elements
         self.on_project_changed = None
+
+        # Scrollable container
+        self._canvas = tk.Canvas(self, highlightthickness=0)
+        self._v_scroll = ttk.Scrollbar(self, orient="vertical", command=self._canvas.yview)
+        self._inner = ttk.Frame(self._canvas, padding=10)
+
+        self._inner.bind("<Configure>", lambda e: self._canvas.configure(scrollregion=self._canvas.bbox("all")))
+        self._canvas_window = self._canvas.create_window((0, 0), window=self._inner, anchor="nw")
+        self._canvas.configure(yscrollcommand=self._v_scroll.set)
+
+        self._v_scroll.pack(side="right", fill="y")
+        self._canvas.pack(side="left", fill="both", expand=True)
+
+        # Resize inner frame width to match canvas
+        self._canvas.bind("<Configure>", self._on_canvas_configure)
+
+        # Mouse wheel scrolling
+        self._canvas.bind_all("<Button-4>", self._on_mousewheel_up, add="+")
+        self._canvas.bind_all("<Button-5>", self._on_mousewheel_down, add="+")
 
         self._build_config_section()
         self._build_scan_list_section()
@@ -25,12 +44,21 @@ class LocatorPanel(ttk.Frame):
         self._build_log_section()
         self._refresh_setup_scripts()
 
+    def _on_canvas_configure(self, event):
+        self._canvas.itemconfig(self._canvas_window, width=event.width)
+
+    def _on_mousewheel_up(self, event):
+        self._canvas.yview_scroll(-3, "units")
+
+    def _on_mousewheel_down(self, event):
+        self._canvas.yview_scroll(3, "units")
+
     # ------------------------------------------------------------------
     # UI construction
     # ------------------------------------------------------------------
 
     def _build_config_section(self):
-        cfg = ttk.LabelFrame(self, text=" 1. Cau hinh Du an & Them trang quet ", padding=10)
+        cfg = ttk.LabelFrame(self._inner, text=" 1. Cau hinh Du an & Them trang quet ", padding=10)
         cfg.pack(fill="x", pady=(0, 5))
 
         # Row 0: project path
@@ -65,12 +93,12 @@ class LocatorPanel(ttk.Frame):
         )
 
     def _build_scan_list_section(self):
-        scan_frame = ttk.LabelFrame(self, text=" 2. Danh sach trang quet ", padding=10)
+        scan_frame = ttk.LabelFrame(self._inner, text=" 2. Danh sach trang quet ", padding=5)
         scan_frame.pack(fill="x", pady=5)
 
         # Scan list treeview
         columns = ("STT", "URL", "PageID", "Trang thai")
-        self.scan_tree = ttk.Treeview(scan_frame, columns=columns, show="headings", height=4)
+        self.scan_tree = ttk.Treeview(scan_frame, columns=columns, show="headings", height=3)
         self.scan_tree.heading("STT", text="#")
         self.scan_tree.heading("URL", text="URL")
         self.scan_tree.heading("PageID", text="Page ID")
@@ -103,11 +131,11 @@ class LocatorPanel(ttk.Frame):
 
     def _build_elements_tree(self):
         frame = ttk.LabelFrame(
-            self,
+            self._inner,
             text=" 3. Cac phan tu tim thay ",
-            padding=10,
+            padding=5,
         )
-        frame.pack(fill="both", expand=True, pady=5)
+        frame.pack(fill="x", pady=5)
 
         # Page selector for viewing results
         selector_frame = ttk.Frame(frame)
@@ -127,7 +155,7 @@ class LocatorPanel(ttk.Frame):
 
         # Treeview
         columns = ("Type", "Name", "Selector", "Action", "DataKey")
-        self.tree = ttk.Treeview(frame, columns=columns, show="headings")
+        self.tree = ttk.Treeview(frame, columns=columns, show="headings", height=8)
         self.tree.heading("Type", text="Loai")
         self.tree.heading("Name", text="Ten / ID")
         self.tree.heading("Selector", text="Selector (CSS/ID)")
@@ -140,7 +168,7 @@ class LocatorPanel(ttk.Frame):
         self.tree.column("Action", width=120)
         self.tree.column("DataKey", width=120)
 
-        self.tree.pack(fill="both", expand=True, side="left")
+        self.tree.pack(fill="x", side="left", expand=True)
 
         scrollbar = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
@@ -149,11 +177,11 @@ class LocatorPanel(ttk.Frame):
         self.tree.bind("<Double-1>", self._on_tree_double_click)
 
     def _build_log_section(self):
-        log_frame = ttk.LabelFrame(self, text=" Nhat ky ", padding=5)
-        log_frame.pack(fill="both", expand=True, pady=5)
+        log_frame = ttk.LabelFrame(self._inner, text=" Nhat ky ", padding=5)
+        log_frame.pack(fill="x", pady=5)
 
-        self.log_text = tk.Text(log_frame, height=5, bg="#1e1e1e", fg="#d4d4d4", font=("Consolas", 10))
-        self.log_text.pack(fill="both", expand=True)
+        self.log_text = tk.Text(log_frame, height=4, bg="#1e1e1e", fg="#d4d4d4", font=("Consolas", 10))
+        self.log_text.pack(fill="x")
 
     # ------------------------------------------------------------------
     # Scan page list management
@@ -557,7 +585,7 @@ class LocatorPanel(ttk.Frame):
     # ------------------------------------------------------------------
 
     def _build_ai_section(self):
-        ai_frame = ttk.LabelFrame(self, text=" 4. AI - Tao test tu dong (Gemini) ", padding=10)
+        ai_frame = ttk.LabelFrame(self._inner, text=" 4. AI - Tao test tu dong (Gemini) ", padding=5)
         ai_frame.pack(fill="x", pady=5)
 
         # Row 0: API key
@@ -571,7 +599,7 @@ class LocatorPanel(ttk.Frame):
 
         # Row 1: Use case text area
         ttk.Label(ai_frame, text="Use Case:").grid(row=1, column=0, sticky="nw", pady=5)
-        self.usecase_text = tk.Text(ai_frame, height=8, width=70, font=("Consolas", 10))
+        self.usecase_text = tk.Text(ai_frame, height=5, width=70, font=("Consolas", 10))
         self.usecase_text.grid(row=1, column=1, padx=5, pady=5, columnspan=3, sticky="we")
 
         # Row 2: Generate button
