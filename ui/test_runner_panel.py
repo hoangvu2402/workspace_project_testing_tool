@@ -25,6 +25,7 @@ class TestRunnerPanel(ttk.Frame):
         self._build_queue_section()
         self._build_log_section()
         self._refresh_all()
+        self._refresh_setup_scripts()
 
     # ------------------------------------------------------------------
     # UI construction
@@ -43,6 +44,12 @@ class TestRunnerPanel(ttk.Frame):
         browser_combo = ttk.Combobox(cfg, textvariable=self.shared["browser_var"], width=12)
         browser_combo["values"] = ("chromium", "firefox", "webkit")
         browser_combo.grid(row=0, column=5, sticky="w", padx=5)
+
+        # Row 1: setup script selector
+        ttk.Label(cfg, text="Setup script:").grid(row=1, column=0, sticky="w", pady=5)
+        self.setup_combo = ttk.Combobox(cfg, width=35, state="readonly")
+        self.setup_combo.grid(row=1, column=1, padx=5, sticky="w", columnspan=3)
+        ttk.Button(cfg, text="Lam moi", command=self._refresh_setup_scripts).grid(row=1, column=4, padx=5)
 
     def _build_add_to_queue_section(self):
         add_frame = ttk.LabelFrame(self, text=" 2. Chon Template & Du lieu ", padding=10)
@@ -353,6 +360,11 @@ class TestRunnerPanel(ttk.Frame):
                 env["BROWSER"] = self.shared["browser_var"].get()
                 env.update({"PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"})
 
+                # Pass setup script path to test process
+                setup_name = self.setup_combo.get()
+                if setup_name and setup_name != "(Khong dung)":
+                    env["SETUP_SCRIPT"] = self.logic.get_setup_script_path(proj_path, setup_name)
+
                 if mode == "e2e":
                     env["E2E_WORKFLOW"] = workflow_path
 
@@ -457,6 +469,14 @@ class TestRunnerPanel(ttk.Frame):
 
     def update_data_list(self):
         self._refresh_data_list()
+
+    def _refresh_setup_scripts(self):
+        """Refresh the setup script dropdown."""
+        proj = self.shared["project_path"].get()
+        scripts = self.logic.get_setup_scripts(proj)
+        values = ["(Khong dung)"] + scripts
+        self.setup_combo["values"] = values
+        self.setup_combo.set(values[0])
 
     def _append_log(self, message):
         self.log_text.insert(tk.END, message + "\n")

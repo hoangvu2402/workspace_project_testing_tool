@@ -21,6 +21,7 @@ class LocatorPanel(ttk.Frame):
         self._build_scan_list_section()
         self._build_elements_tree()
         self._build_log_section()
+        self._refresh_setup_scripts()
 
     # ------------------------------------------------------------------
     # UI construction
@@ -45,9 +46,15 @@ class LocatorPanel(ttk.Frame):
         ttk.Label(cfg, text="Page ID:").grid(row=1, column=3, sticky="w", padx=(10, 0))
         ttk.Entry(cfg, textvariable=self.shared["page_id_var"], width=15).grid(row=1, column=4, padx=5)
 
-        # Row 2: add page button
+        # Row 2: setup script selector
+        ttk.Label(cfg, text="Setup script:").grid(row=2, column=0, sticky="w", pady=5)
+        self.setup_combo = ttk.Combobox(cfg, width=35, state="readonly")
+        self.setup_combo.grid(row=2, column=1, padx=5, sticky="w", columnspan=2)
+        ttk.Button(cfg, text="Lam moi", command=self._refresh_setup_scripts).grid(row=2, column=3, padx=5)
+
+        # Row 3: add page button
         btn_frame = ttk.Frame(cfg)
-        btn_frame.grid(row=2, column=0, columnspan=5, pady=5)
+        btn_frame.grid(row=3, column=0, columnspan=5, pady=5)
         ttk.Button(btn_frame, text="Them trang vao danh sach", command=self._add_scan_page).pack(
             side="left", padx=5
         )
@@ -226,6 +233,22 @@ class LocatorPanel(ttk.Frame):
     # Scanning
     # ------------------------------------------------------------------
 
+    def _get_setup_script_path(self):
+        """Return the absolute path of the selected setup script, or empty string."""
+        script_name = self.setup_combo.get()
+        if not script_name or script_name == "(Khong dung)":
+            return ""
+        proj = self.shared["project_path"].get()
+        return self.logic.get_setup_script_path(proj, script_name)
+
+    def _refresh_setup_scripts(self):
+        """Refresh the setup script dropdown."""
+        proj = self.shared["project_path"].get()
+        scripts = self.logic.get_setup_scripts(proj)
+        values = ["(Khong dung)"] + scripts
+        self.setup_combo["values"] = values
+        self.setup_combo.set(values[0])
+
     def _scan_single(self):
         """Scan the current URL + Page ID (existing single-page behavior)."""
         url = self.shared["url_path"].get().strip()
@@ -237,11 +260,14 @@ class LocatorPanel(ttk.Frame):
             messagebox.showwarning("Chu y", "Vui long nhap Page ID")
             return
 
+        setup_script = self._get_setup_script_path()
+        if setup_script:
+            self._append_log(f"Chay setup script: {self.setup_combo.get()}")
         self._append_log(f"Bat dau quet: {page_id} ({url})...")
 
         def run_scan():
             try:
-                elements = self.logic.scan_url(url)
+                elements = self.logic.scan_url(url, setup_script=setup_script)
                 self._scan_results[page_id] = {"url": url, "elements": elements}
                 self.after(0, lambda: self._update_tree(elements))
                 self.after(0, lambda: self._update_page_selector())
@@ -266,6 +292,9 @@ class LocatorPanel(ttk.Frame):
 
         self.scan_all_btn.config(state="disabled")
         total = len(self._scan_pages)
+        setup_script = self._get_setup_script_path()
+        if setup_script:
+            self._append_log(f"Setup script: {self.setup_combo.get()}")
         self._append_log(f"\nBat dau quet {total} trang...\n{'='*40}")
 
         def run_all():
@@ -285,7 +314,7 @@ class LocatorPanel(ttk.Frame):
                 self.after(0, self._refresh_scan_tree)
 
                 try:
-                    elements = self.logic.scan_url(url)
+                    elements = self.logic.scan_url(url, setup_script=setup_script)
                     self._scan_results[page_id] = {"url": url, "elements": elements}
 
                     # Auto-save locators and template

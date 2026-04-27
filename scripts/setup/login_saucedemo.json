@@ -1,0 +1,28 @@
+{
+    "name": "Login SauceDemo",
+    "description": "Tu dong dang nhap vao SauceDemo voi tai khoan standard_user",
+    "steps": [
+        {
+            "action": "navigate",
+            "value": "https://www.saucedemo.com/"
+        },
+        {
+            "action": "fill",
+            "selector": "#user-name",
+            "value": "standard_user"
+        },
+        {
+            "action": "fill",
+            "selector": "#password",
+            "value": "secret_sauce"
+        },
+        {
+            "action": "click",
+            "selector": "#login-button"
+        },
+        {
+            "action": "wait",
+            "value": "2000"
+        }
+    ]
+}

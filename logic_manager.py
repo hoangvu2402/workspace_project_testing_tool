@@ -7,6 +7,7 @@ import shutil
 from pathlib import Path
 from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
+from core.setup_runner import SetupRunner
 
 class AutomationLogic:
     def __init__(self):
@@ -18,8 +19,18 @@ class AutomationLogic:
         domain = parsed_url.netloc.replace('.', '_') if parsed_url.netloc else "unknown_site"
         return re.sub(r'[\\/*?:"<>|]', "", domain)
 
-    def scan_url(self, url, browser_name="chromium"):
-        """Thực hiện quét trang web bằng Playwright và trả về danh sách phần tử bao gồm cả các thẻ rỗng"""
+    def get_setup_scripts(self, project_path):
+        """List available setup scripts in scripts/setup/."""
+        return SetupRunner.list_scripts(project_path)
+
+    def scan_url(self, url, browser_name="chromium", setup_script=""):
+        """Thực hiện quét trang web bằng Playwright và trả về danh sách phần tử bao gồm cả các thẻ rỗng
+
+        Args:
+            url: Target URL to scan.
+            browser_name: Browser to use (chromium/firefox/webkit).
+            setup_script: Optional absolute path to a setup script to run before scanning.
+        """
         if not url:
             raise ValueError("URL không được để trống")
 
@@ -27,6 +38,11 @@ class AutomationLogic:
             browser_type = getattr(p, browser_name, p.chromium)
             browser = browser_type.launch(headless=True)
             page = browser.new_page()
+
+            # Run setup script if provided (e.g. login, dismiss banners)
+            if setup_script:
+                SetupRunner.run(page, setup_script)
+
             page.goto(url, timeout=60000)
             
             # Trong file logic_manager.txt, thay đổi đoạn evaluate trong scan_url:
@@ -296,6 +312,12 @@ class AutomationLogic:
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
         return str(filepath)
+
+    def get_setup_script_path(self, project_path, script_name):
+        """Return absolute path for a setup script by name."""
+        if not script_name:
+            return ""
+        return str(Path(project_path) / "scripts" / "setup" / script_name)
 
     def get_pytest_command(self, test_file):
         """Tạo lệnh chạy pytest"""

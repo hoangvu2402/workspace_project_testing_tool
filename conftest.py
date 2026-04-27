@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 import pytest
@@ -6,6 +7,7 @@ from playwright.sync_api import sync_playwright
 from config.config import Config
 from utils.logger import log
 from utils.helpers import Helpers
+from core.setup_runner import SetupRunner
 
 @pytest.fixture(scope="session")
 def playwright_instance():
@@ -33,6 +35,12 @@ def page(browser):
     page.set_default_timeout(Config.TIMEOUT)
     
     log.info("Khởi tạo Page context mới.")
+
+    # Run setup script if SETUP_SCRIPT env var is set
+    setup_script = os.environ.get("SETUP_SCRIPT", "")
+    if setup_script:
+        log.info(f"Chay setup script truoc test: {setup_script}")
+        SetupRunner.run(page, setup_script)
     
     yield page
     
