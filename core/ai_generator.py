@@ -5,19 +5,28 @@ then generate/modify locators, templates, test data, and setup scripts.
 
 import json
 import re
+import time
 from utils.logger import log
 
 try:
     from google import genai
+    from google.genai import errors as genai_errors
 except ImportError:
     genai = None
+    genai_errors = None
     log.warning("google-genai not installed. AI features disabled.")
 
 
 class AIGenerator:
     """Generates test artifacts using Google Gemini AI."""
 
-    MODEL_NAME = "gemini-2.0-flash"
+    FALLBACK_MODELS = [
+        "gemini-2.0-flash",
+        "gemini-2.0-flash-lite",
+        "gemini-1.5-flash",
+    ]
+    MAX_RETRIES = 3
+    DEFAULT_RETRY_DELAY = 20
 
     def __init__(self, api_key: str = ""):
         self.api_key = api_key
@@ -36,32 +45,87 @@ class AIGenerator:
             self._client = genai.Client(api_key=self.api_key)
         return self._client
 
+    @staticmethod
+    def _parse_retry_delay(error):
+        """Extract retry delay seconds from a Gemini API error."""
+        err_str = str(error)
+        match = re.search(r"retry\s+in\s+([\d.]+)\s*s", err_str, re.IGNORECASE)
+        if match:
+            return float(match.group(1))
+        match = re.search(r"retryDelay.*?'(\d+)s'", err_str)
+        if match:
+            return float(match.group(1))
+        return None
+
+    @staticmethod
+    def _is_daily_quota_exhausted(error):
+        """Check if the error indicates daily quota is fully exhausted (not just per-minute)."""
+        err_str = str(error)
+        return "PerDay" in err_str and "limit: 0" in err_str
+
+    def _call_model(self, client, model_name, prompt):
+        """Call a single model with retry logic for per-minute rate limits."""
+        for attempt in range(1, self.MAX_RETRIES + 1):
+            try:
+                log.info(f"Goi model {model_name} (lan {attempt})...")
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                )
+                return response.text
+            except Exception as e:
+                err_str = str(e)
+                is_rate_limit = "429" in err_str or "RESOURCE_EXHAUSTED" in err_str
+
+                if not is_rate_limit:
+                    raise
+
+                if self._is_daily_quota_exhausted(e):
+                    log.warning(f"Model {model_name}: het quota ngay. Chuyen sang model khac...")
+                    return None
+
+                delay = self._parse_retry_delay(e) or self.DEFAULT_RETRY_DELAY
+                if attempt < self.MAX_RETRIES:
+                    log.info(f"Rate limit, thu lai sau {delay:.0f}s... (lan {attempt}/{self.MAX_RETRIES})")
+                    time.sleep(delay + 2)
+                else:
+                    log.warning(f"Model {model_name}: het so lan thu lai.")
+                    return None
+        return None
+
     def generate(self, use_case_text: str, locators: dict, template: dict,
                  page_id: str, url: str) -> dict:
         """Call Gemini to generate modified locators, template, test data, and setup script.
 
-        Args:
-            use_case_text: The use case specification text from the user.
-            locators: Current locators dict (name -> {selector, type}).
-            template: Current template dict (page_id, url, steps).
-            page_id: The page identifier.
-            url: The target URL.
-
-        Returns:
-            dict with keys: locators, template, test_data, setup_script, summary
+        Tries multiple models with automatic retry and fallback.
         """
         client = self._get_client()
-
         prompt = self._build_prompt(use_case_text, locators, template, page_id, url)
         log.info("Dang goi Gemini AI...")
 
-        response = client.models.generate_content(
-            model=self.MODEL_NAME,
-            contents=prompt,
-        )
-        raw_text = response.text
-        log.info(f"Gemini tra ve {len(raw_text)} ky tu.")
+        raw_text = None
+        used_model = None
 
+        for model_name in self.FALLBACK_MODELS:
+            raw_text = self._call_model(client, model_name, prompt)
+            if raw_text:
+                used_model = model_name
+                break
+            log.info(f"Model {model_name} khong kha dung, thu model tiep theo...")
+
+        if not raw_text:
+            raise RuntimeError(
+                "Tat ca cac model Gemini deu het quota.\n\n"
+                "Giai phap:\n"
+                "1. Doi 1-2 phut roi thu lai (quota per-minute se reset)\n"
+                "2. Doi den ngay mai (quota mien phi reset moi ngay)\n"
+                "3. Nang cap len Google AI Studio tra phi tai:\n"
+                "   https://ai.google.dev/pricing\n"
+                "4. Tao API key moi tai:\n"
+                "   https://aistudio.google.com/apikey"
+            )
+
+        log.info(f"Gemini ({used_model}) tra ve {len(raw_text)} ky tu.")
         return self._parse_response(raw_text, locators, template, page_id, url)
 
     def _build_prompt(self, use_case_text, locators, template, page_id, url):

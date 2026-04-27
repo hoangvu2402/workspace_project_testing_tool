@@ -667,7 +667,7 @@ class LocatorPanel(ttk.Frame):
         # Configure AI and call
         self.logic.configure_ai(api_key)
         self.ai_generate_btn.config(state="disabled")
-        self.ai_status_label.config(text="Dang xu ly...")
+        self.ai_status_label.config(text="Dang xu ly... (tu dong thu lai neu bi rate limit)")
         self._append_log(f"[AI] Dang goi Gemini AI cho {page_id}...")
 
         def run_ai():
