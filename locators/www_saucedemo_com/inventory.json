@@ -1,42 +1,66 @@
 {
-    "TITLE": {
-        "selector": ".title",
-        "type": "info",
-        "name": "Products title"
+    "SWAG_LABS": {
+        "selector": "#root > .login_container > .login_logo",
+        "type": "info"
     },
-    "INVENTORY_LIST": {
-        "selector": ".inventory_list",
-        "type": "info",
-        "name": "Product list container"
+    "ROOT": {
+        "selector": "#root",
+        "type": "info"
     },
-    "SHOPPING_CART": {
-        "selector": ".shopping_cart_link",
-        "type": "action",
-        "name": "Cart icon"
+    "LOGIN_CONTAINER": {
+        "selector": "[data-test=\"login-container\"]",
+        "type": "info"
     },
-    "BURGER_MENU": {
-        "selector": "#react-burger-menu-btn",
-        "type": "action",
-        "name": "Menu button"
+    "EPIC_SADFACE_YOU_CA": {
+        "selector": ".login-box > form > .error-message-container.error",
+        "type": "info"
     },
-    "PRODUCT_SORT": {
-        "selector": "[data-test=\"product-sort-container\"]",
-        "type": "action",
-        "name": "Sort dropdown"
+    "LOGIN_BUTTON_CONTAINER": {
+        "selector": "#login_button_container",
+        "type": "info"
     },
-    "INVENTORY_ITEM_1": {
-        "selector": ".inventory_item:first-child .inventory_item_name",
-        "type": "info",
-        "name": "First product name"
+    "DIV": {
+        "selector": ".login-box > form > .form_group",
+        "type": "info"
     },
-    "ADD_TO_CART_BACKPACK": {
-        "selector": "#add-to-cart-sauce-labs-backpack",
-        "type": "action",
-        "name": "Add Backpack to cart"
+    "USER_NAME": {
+        "selector": "#user-name",
+        "type": "action"
     },
-    "CART_BADGE": {
-        "selector": ".shopping_cart_badge",
-        "type": "info",
-        "name": "Cart badge count"
+    "PASSWORD": {
+        "selector": "#password",
+        "type": "action"
+    },
+    "ERROR": {
+        "selector": "[data-test=\"error\"]",
+        "type": "info"
+    },
+    "ERROR_BUTTON": {
+        "selector": "[data-test=\"error-button\"]",
+        "type": "action"
+    },
+    "LOGIN_BUTTON": {
+        "selector": "#login-button",
+        "type": "action"
+    },
+    "LOGIN_CREDENTIALS_CONTAINER": {
+        "selector": "[data-test=\"login-credentials-container\"]",
+        "type": "info"
+    },
+    "ACCEPTED_USERNAMES_A": {
+        "selector": ".login_credentials_wrap-inner > #login_credentials > h4",
+        "type": "info"
+    },
+    "LOGIN_CREDENTIALS": {
+        "selector": "#login_credentials",
+        "type": "info"
+    },
+    "LOGIN_PASSWORD": {
+        "selector": "[data-test=\"login-password\"]",
+        "type": "info"
+    },
+    "PASSWORD_FOR_ALL_USE": {
+        "selector": ".login_credentials_wrap-inner > [data-test=\"login-password\"] > h4",
+        "type": "info"
     }
 }

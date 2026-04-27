@@ -69,7 +69,10 @@
             "needs_selector": true,
             "needs_value": true,
             "params": {
-                "key": {"type": "str", "description": "Phim can nhan (VD: Enter, Tab, ArrowDown)"}
+                "key": {
+                    "type": "str",
+                    "description": "Phim can nhan (VD: Enter, Tab, ArrowDown)"
+                }
             },
             "log_message": "Nhan phim '{value}' tai: {name}",
             "category": "interaction"
@@ -80,7 +83,11 @@
             "needs_selector": true,
             "needs_value": true,
             "params": {
-                "delay": {"type": "float", "description": "Do tre giua cac ky tu (ms)", "default": 0}
+                "delay": {
+                    "type": "float",
+                    "description": "Do tre giua cac ky tu (ms)",
+                    "default": 0
+                }
             },
             "log_message": "Go '{value}' vao: {name}",
             "category": "interaction"
@@ -148,21 +155,18 @@
             "needs_selector": true,
             "needs_value": false,
             "params": {
-                "state": {"type": "str", "description": "Trang thai: attached/detached/hidden/visible", "default": "visible"},
-                "timeout": {"type": "float", "description": "Thoi gian cho toi da (ms)", "default": 10000}
+                "state": {
+                    "type": "str",
+                    "description": "Trang thai: attached/detached/hidden/visible",
+                    "default": "visible"
+                },
+                "timeout": {
+                    "type": "float",
+                    "description": "Thoi gian cho toi da (ms)",
+                    "default": 10000
+                }
             },
             "log_message": "Cho phan tu: {name}",
-            "category": "utility"
-        },
-        "screenshot": {
-            "display_name": "Screenshot",
-            "playwright_method": "page.screenshot",
-            "needs_selector": false,
-            "needs_value": true,
-            "params": {
-                "full_page": {"type": "bool", "description": "Chup toan trang", "default": false}
-            },
-            "log_message": "Chup man hinh: {value}",
             "category": "utility"
         },
         "navigate": {
@@ -178,78 +182,152 @@
     "playwright_functions": {
         "page.click": {
             "description": "Click vao phan tu",
-            "params": ["selector"],
-            "optional_params": {"timeout": "float", "force": "bool", "delay": "float"}
+            "params": [
+                "selector"
+            ],
+            "optional_params": {
+                "timeout": "float",
+                "force": "bool",
+                "delay": "float"
+            }
         },
         "page.dblclick": {
             "description": "Double-click vao phan tu",
-            "params": ["selector"],
-            "optional_params": {"timeout": "float", "force": "bool"}
+            "params": [
+                "selector"
+            ],
+            "optional_params": {
+                "timeout": "float",
+                "force": "bool"
+            }
         },
         "page.fill": {
             "description": "Xoa va nhap text vao input/textarea",
-            "params": ["selector", "value"],
-            "optional_params": {"timeout": "float", "force": "bool"}
+            "params": [
+                "selector",
+                "value"
+            ],
+            "optional_params": {
+                "timeout": "float",
+                "force": "bool"
+            }
         },
         "page.type": {
             "description": "Go tung ky tu (co the co delay)",
-            "params": ["selector", "text"],
-            "optional_params": {"delay": "float", "timeout": "float"}
+            "params": [
+                "selector",
+                "text"
+            ],
+            "optional_params": {
+                "delay": "float",
+                "timeout": "float"
+            }
         },
         "page.press": {
             "description": "Nhan mot phim (Enter, Tab, vv.)",
-            "params": ["selector", "key"],
-            "optional_params": {"delay": "float", "timeout": "float"}
+            "params": [
+                "selector",
+                "key"
+            ],
+            "optional_params": {
+                "delay": "float",
+                "timeout": "float"
+            }
         },
         "page.check": {
             "description": "Danh dau checkbox",
-            "params": ["selector"],
-            "optional_params": {"timeout": "float", "force": "bool"}
+            "params": [
+                "selector"
+            ],
+            "optional_params": {
+                "timeout": "float",
+                "force": "bool"
+            }
         },
         "page.uncheck": {
             "description": "Bo danh dau checkbox",
-            "params": ["selector"],
-            "optional_params": {"timeout": "float", "force": "bool"}
+            "params": [
+                "selector"
+            ],
+            "optional_params": {
+                "timeout": "float",
+                "force": "bool"
+            }
         },
         "page.hover": {
             "description": "Di chuot len phan tu",
-            "params": ["selector"],
-            "optional_params": {"timeout": "float", "force": "bool"}
+            "params": [
+                "selector"
+            ],
+            "optional_params": {
+                "timeout": "float",
+                "force": "bool"
+            }
         },
         "page.select_option": {
             "description": "Chon option trong <select>",
-            "params": ["selector", "value"],
-            "optional_params": {"timeout": "float"}
+            "params": [
+                "selector",
+                "value"
+            ],
+            "optional_params": {
+                "timeout": "float"
+            }
         },
         "page.set_input_files": {
             "description": "Upload file vao input[type=file]",
-            "params": ["selector", "files"],
-            "optional_params": {"timeout": "float"}
+            "params": [
+                "selector",
+                "files"
+            ],
+            "optional_params": {
+                "timeout": "float"
+            }
         },
         "page.goto": {
             "description": "Dieu huong den URL",
-            "params": ["url"],
-            "optional_params": {"timeout": "float", "wait_until": "str"}
+            "params": [
+                "url"
+            ],
+            "optional_params": {
+                "timeout": "float",
+                "wait_until": "str"
+            }
         },
         "page.wait_for_timeout": {
             "description": "Cho mot khoang thoi gian (ms)",
-            "params": ["timeout"],
+            "params": [
+                "timeout"
+            ],
             "optional_params": {}
         },
         "page.wait_for_selector": {
             "description": "Cho phan tu xuat hien",
-            "params": ["selector"],
-            "optional_params": {"state": "str", "timeout": "float"}
+            "params": [
+                "selector"
+            ],
+            "optional_params": {
+                "state": "str",
+                "timeout": "float"
+            }
         },
         "page.inner_text": {
             "description": "Lay noi dung text cua phan tu",
-            "params": ["selector"],
-            "optional_params": {"timeout": "float"}
+            "params": [
+                "selector"
+            ],
+            "optional_params": {
+                "timeout": "float"
+            }
         },
         "page.is_visible": {
             "description": "Kiem tra phan tu co hien thi",
-            "params": ["selector"],
-            "optional_params": {"timeout": "float"}
+            "params": [
+                "selector"
+            ],
+            "optional_params": {
+                "timeout": "float"
+            }
         },
         "page.url": {
             "description": "Lay URL hien tai cua trang",
@@ -259,27 +337,48 @@
         "page.screenshot": {
             "description": "Chup anh man hinh",
             "params": [],
-            "optional_params": {"path": "str", "full_page": "bool", "type": "str"}
+            "optional_params": {
+                "path": "str",
+                "full_page": "bool",
+                "type": "str"
+            }
         },
         "page.get_attribute": {
             "description": "Lay gia tri attribute cua phan tu",
-            "params": ["selector", "name"],
-            "optional_params": {"timeout": "float"}
+            "params": [
+                "selector",
+                "name"
+            ],
+            "optional_params": {
+                "timeout": "float"
+            }
         },
         "page.evaluate": {
             "description": "Chay JavaScript tren trang",
-            "params": ["expression"],
+            "params": [
+                "expression"
+            ],
             "optional_params": {}
         },
         "page.drag_and_drop": {
             "description": "Keo tha phan tu",
-            "params": ["source", "target"],
-            "optional_params": {"timeout": "float", "force": "bool"}
+            "params": [
+                "source",
+                "target"
+            ],
+            "optional_params": {
+                "timeout": "float",
+                "force": "bool"
+            }
         },
         "page.focus": {
             "description": "Focus vao phan tu",
-            "params": ["selector"],
-            "optional_params": {"timeout": "float"}
+            "params": [
+                "selector"
+            ],
+            "optional_params": {
+                "timeout": "float"
+            }
         }
     }
 }

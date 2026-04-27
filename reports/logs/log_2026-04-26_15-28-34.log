@@ -1,0 +1,37 @@
+2026-04-26 15:28:34 | INFO     | config.config:<module>:12 - Loaded environment variables from E:\doantotnghiep\doan2\.env
+2026-04-26 15:28:34 | INFO     | config.config:validate_config:66 - ==================================================
+2026-04-26 15:28:34 | INFO     | config.config:validate_config:67 -       THÔNG TIN CẤU HÌNH HỆ THỐNG
+2026-04-26 15:28:34 | INFO     | config.config:validate_config:68 -   > URL Mục tiêu : https://www.saucedemo.com/
+2026-04-26 15:28:34 | INFO     | config.config:validate_config:69 -   > Trình duyệt : chromium (Headless: False)
+2026-04-26 15:28:34 | INFO     | config.config:validate_config:70 -   > Timeout     : 30000 ms
+2026-04-26 15:28:34 | INFO     | config.config:validate_config:71 - ==================================================
+2026-04-26 15:28:35 | INFO     | test_e2e:<module>:19 - E2E Test | Site: www_saucedemo_com | Workflow: E:\doantotnghiep\doan2\templates\www_saucedemo_com\e2e_login_to_inventory.json | Data: e2e_login_inventory_data.xlsx
+2026-04-26 15:28:35 | WARNING  | utils.helpers:read_excel_data:50 - ⚠️ đang tìm file tại: E:\doantotnghiep\doan2\test_data\www_saucedemo_com\e2e_login_inventory_data.xlsx ----- e2e_login_inventory_data.xlsx --- www_saucedemo_com
+2026-04-26 15:28:35 | INFO     | utils.helpers:read_excel_data:53 - Đang đọc dữ liệu Excel: E:\doantotnghiep\doan2\test_data\www_saucedemo_com\e2e_login_inventory_data.xlsx
+2026-04-26 15:28:35 | INFO     | utils.helpers:read_excel_data:63 - Đọc thành công 1 dòng dữ liệu.
+2026-04-26 15:28:44 | INFO     | conftest:browser:20 - Khởi động trình duyệt: chromium
+2026-04-26 15:28:45 | INFO     | conftest:page:35 - Khởi tạo Page context mới.
+2026-04-26 15:28:45 | INFO     | core.e2e_runner:__init__:32 - Da tai locators cho trang: login (10 phan tu)
+2026-04-26 15:28:45 | INFO     | core.e2e_runner:__init__:32 - Da tai locators cho trang: inventory (8 phan tu)
+2026-04-26 15:28:45 | INFO     | core.e2e_runner:run_test:48 - Bat dau kich ban E2E: login_to_inventory cho site www_saucedemo_com
+2026-04-26 15:28:45 | INFO     | pages.base_page:navigate:12 - Dieu huong toi: https://www.saucedemo.com/
+2026-04-26 15:28:47 | INFO     | core.e2e_runner:run_test:64 - ========================================
+2026-04-26 15:28:47 | INFO     | core.e2e_runner:run_test:65 - Chuyen sang trang: login
+2026-04-26 15:28:47 | INFO     | core.e2e_runner:run_test:66 - ========================================
+2026-04-26 15:28:47 | INFO     | core.e2e_runner:_execute_step:97 - [1/9] [login] Step 'USER_NAME' | action='fill' | value='standard_user'
+2026-04-26 15:28:47 | INFO     | pages.base_page:fill:39 - Nhap 'standard_user' vao: USER_NAME
+2026-04-26 15:28:47 | INFO     | core.e2e_runner:_execute_step:97 - [2/9] [login] Step 'PASSWORD' | action='fill_password' | value='secret_sauce'
+2026-04-26 15:28:47 | INFO     | pages.base_page:fill:39 - Nhap 'secret_sauce' vao: PASSWORD
+2026-04-26 15:28:47 | INFO     | core.e2e_runner:_execute_step:97 - [3/9] [login] Step 'LOGIN_BUTTON' | action='click' | value=''
+2026-04-26 15:28:47 | INFO     | pages.base_page:click:19 - Click vao: LOGIN_BUTTON
+2026-04-26 15:28:48 | INFO     | core.e2e_runner:run_test:64 - ========================================
+2026-04-26 15:28:48 | INFO     | core.e2e_runner:run_test:65 - Chuyen sang trang: inventory
+2026-04-26 15:28:48 | INFO     | core.e2e_runner:run_test:66 - ========================================
+2026-04-26 15:28:48 | INFO     | core.e2e_runner:_execute_step:97 - [4/9] [inventory] Step 'TITLE' | action='verify_text' | value='Products'
+2026-04-26 15:28:48 | INFO     | core.e2e_runner:_execute_step:112 - Kiem tra van ban: Ky vong chua 'Products', thuc te co 'Products'
+2026-04-26 15:28:48 | INFO     | core.e2e_runner:_execute_step:97 - [5/9] [inventory] Step 'INVENTORY_LIST' | action='verify_visible' | value=''
+2026-04-26 15:28:48 | INFO     | pages.base_page:is_visible:135 - Kiem tra hien thi: .inventory_list -> True
+2026-04-26 15:28:48 | ERROR    | core.e2e_runner:run_test:80 - Kich ban E2E dung dot ngot do loi: Loi hien thi: Khong tim thay phan tu 'Product list container'
+2026-04-26 15:28:48 | INFO     | utils.helpers:capture_screenshot:104 - Đã lưu ảnh chụp màn hình tại: E:\doantotnghiep\doan2\reports\screenshots\FAILED_test_run_e2e_workflow[data0]_152848.png
+2026-04-26 15:28:48 | ERROR    | conftest:pytest_runtest_makereport:67 - Test case 'test_run_e2e_workflow[data0]' thất bại. Đã chụp ảnh màn hình.
+2026-04-26 15:28:48 | INFO     | conftest:browser:25 - Đóng trình duyệt.

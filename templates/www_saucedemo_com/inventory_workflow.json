@@ -1,6 +1,6 @@
 {
-    "page_id": "login",
-    "url": "https://www.saucedemo.com/",
+    "page_id": "inventory",
+    "url": "https://www.saucedemo.com/inventory.html",
     "steps": [
         {
             "id": "SWAG_LABS",
@@ -28,9 +28,9 @@
             "data_key": "login_container"
         },
         {
-            "id": "DIV",
+            "id": "EPIC_SADFACE_YOU_CA",
             "action": "verify_text",
-            "data_key": "div"
+            "data_key": "epic_sadface_you_ca"
         },
         {
             "id": "LOGIN_BUTTON_CONTAINER",
@@ -38,9 +38,9 @@
             "data_key": "login_button_container"
         },
         {
-            "id": "DIV",
+            "id": "EPIC_SADFACE_YOU_CA",
             "action": "verify_text",
-            "data_key": "div"
+            "data_key": "epic_sadface_you_ca"
         },
         {
             "id": "DIV",
@@ -58,9 +58,19 @@
             "data_key": "password"
         },
         {
-            "id": "DIV",
+            "id": "EPIC_SADFACE_YOU_CA",
             "action": "verify_text",
-            "data_key": "div"
+            "data_key": "epic_sadface_you_ca"
+        },
+        {
+            "id": "ERROR",
+            "action": "verify_text",
+            "data_key": "error"
+        },
+        {
+            "id": "ERROR_BUTTON",
+            "action": "click",
+            "data_key": "error_button"
         },
         {
             "id": "LOGIN_BUTTON",

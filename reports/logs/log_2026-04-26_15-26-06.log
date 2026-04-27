@@ -1,0 +1,14 @@
+2026-04-26 15:26:06 | INFO     | config.config:<module>:12 - Loaded environment variables from E:\doantotnghiep\doan2\.env
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:66 - ==================================================
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:67 -       THÔNG TIN CẤU HÌNH HỆ THỐNG
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:68 -   > URL Mục tiêu : https://www.saucedemo.com
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:69 -   > Trình duyệt : chromium (Headless: False)
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:70 -   > Timeout     : 30000 ms
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:71 - ==================================================
+2026-04-26 15:26:06 | INFO     | config.config:<module>:12 - Loaded environment variables from E:\doantotnghiep\doan2\.env
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:66 - ==================================================
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:67 -       THÔNG TIN CẤU HÌNH HỆ THỐNG
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:68 -   > URL Mục tiêu : https://www.saucedemo.com
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:69 -   > Trình duyệt : chromium (Headless: False)
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:70 -   > Timeout     : 30000 ms
+2026-04-26 15:26:06 | INFO     | config.config:validate_config:71 - ==================================================

@@ -1,4 +1,16 @@
 {
+    "SWAG_LABS": {
+        "selector": "#root > .login_container > .login_logo",
+        "type": "info"
+    },
+    "ROOT": {
+        "selector": "#root",
+        "type": "info"
+    },
+    "LOGIN_CONTAINER": {
+        "selector": "[data-test=\"login-container\"]",
+        "type": "info"
+    },
     "DIV": {
         "selector": ".login-box > form > .error-message-container",
         "type": "info"
