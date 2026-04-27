@@ -12,7 +12,7 @@ class AutomationGeneratorUI:
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Automation Control Center")
-        self.root.geometry("1100x850")
+        self.root.geometry("1100x950")
 
         self.logic = AutomationLogic()
 

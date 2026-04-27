@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import threading
 import json
 from logic_manager import AutomationLogic
+from pathlib import Path
 
 
 class LocatorPanel(ttk.Frame):
@@ -20,6 +21,7 @@ class LocatorPanel(ttk.Frame):
         self._build_config_section()
         self._build_scan_list_section()
         self._build_elements_tree()
+        self._build_ai_section()
         self._build_log_section()
         self._refresh_setup_scripts()
 
@@ -549,6 +551,261 @@ class LocatorPanel(ttk.Frame):
         btn_frame.pack(fill="x", pady=5)
         ttk.Button(btn_frame, text="Luu lai", command=save_json).pack(side="right", padx=10)
         ttk.Button(btn_frame, text="Dong", command=editor_win.destroy).pack(side="right")
+
+    # ------------------------------------------------------------------
+    # AI Generation Section
+    # ------------------------------------------------------------------
+
+    def _build_ai_section(self):
+        ai_frame = ttk.LabelFrame(self, text=" 4. AI - Tao test tu dong (Gemini) ", padding=10)
+        ai_frame.pack(fill="x", pady=5)
+
+        # Row 0: API key
+        ttk.Label(ai_frame, text="API Key:").grid(row=0, column=0, sticky="w")
+        self.api_key_var = tk.StringVar()
+        self.api_key_entry = ttk.Entry(ai_frame, textvariable=self.api_key_var, width=50, show="*")
+        self.api_key_entry.grid(row=0, column=1, padx=5, sticky="w", columnspan=2)
+        ttk.Button(ai_frame, text="Hien/An", command=self._toggle_api_key_visibility).grid(
+            row=0, column=3, padx=5
+        )
+
+        # Row 1: Use case text area
+        ttk.Label(ai_frame, text="Use Case:").grid(row=1, column=0, sticky="nw", pady=5)
+        self.usecase_text = tk.Text(ai_frame, height=8, width=70, font=("Consolas", 10))
+        self.usecase_text.grid(row=1, column=1, padx=5, pady=5, columnspan=3, sticky="we")
+
+        # Row 2: Generate button
+        btn_frame = ttk.Frame(ai_frame)
+        btn_frame.grid(row=2, column=0, columnspan=4, pady=5)
+        self.ai_generate_btn = ttk.Button(
+            btn_frame, text="TAO BANG AI", command=self._on_ai_generate
+        )
+        self.ai_generate_btn.pack(side="left", padx=5)
+        self.ai_status_label = ttk.Label(btn_frame, text="")
+        self.ai_status_label.pack(side="left", padx=10)
+
+    def _toggle_api_key_visibility(self):
+        current = self.api_key_entry.cget("show")
+        self.api_key_entry.config(show="" if current == "*" else "*")
+
+    def _on_ai_generate(self):
+        """Handle AI generate button click."""
+        api_key = self.api_key_var.get().strip()
+        if not api_key:
+            messagebox.showwarning("Chu y", "Vui long nhap API Key cua Google AI Studio.")
+            return
+
+        use_case = self.usecase_text.get("1.0", tk.END).strip()
+        if not use_case:
+            messagebox.showwarning("Chu y", "Vui long nhap Use Case.")
+            return
+
+        page_id = self.page_selector.get()
+        if not page_id:
+            page_id = self.shared["page_id_var"].get().strip()
+        if not page_id:
+            messagebox.showwarning("Chu y", "Vui long chon trang (quet truoc khi dung AI).")
+            return
+
+        # Get URL
+        url = ""
+        if page_id in self._scan_results:
+            url = self._scan_results[page_id].get("url", "")
+        if not url:
+            url = self.shared["url_path"].get().strip()
+
+        # Build current locators from tree
+        locators = {}
+        for item in self.tree.get_children():
+            vals = self.tree.item(item, "values")
+            key = vals[4].upper() if vals[4] else vals[1].upper().replace(" ", "_")
+            if not key:
+                continue
+            locators[key] = {
+                "selector": vals[2],
+                "type": "info" if vals[3] == "verify_text" else "action",
+            }
+
+        # Build current template from tree
+        steps = []
+        for item in self.tree.get_children():
+            vals = self.tree.item(item, "values")
+            key = vals[4].upper() if vals[4] else vals[1].upper().replace(" ", "_")
+            if not key:
+                continue
+            steps.append({"id": key, "action": vals[3], "data_key": vals[4]})
+        template = {"page_id": page_id, "url": url, "steps": steps}
+
+        # Configure AI and call
+        self.logic.configure_ai(api_key)
+        self.ai_generate_btn.config(state="disabled")
+        self.ai_status_label.config(text="Dang xu ly...")
+        self._append_log(f"[AI] Dang goi Gemini AI cho {page_id}...")
+
+        def run_ai():
+            try:
+                result = self.logic.ai_generate(use_case, locators, template, page_id, url)
+                self.after(0, lambda r=result: self._show_ai_results(r, page_id, url))
+                self.after(0, lambda: self._append_log(f"[AI] Hoan thanh! {result.get('summary', '')}"))
+                self.after(0, lambda: self.ai_status_label.config(text="Hoan thanh!"))
+            except Exception as e:
+                self.after(0, lambda: messagebox.showerror("Loi AI", str(e)))
+                self.after(0, lambda: self._append_log(f"[AI] Loi: {str(e)}"))
+                self.after(0, lambda: self.ai_status_label.config(text="Loi!"))
+            finally:
+                self.after(0, lambda: self.ai_generate_btn.config(state="normal"))
+
+        threading.Thread(target=run_ai, daemon=True).start()
+
+    def _show_ai_results(self, result, page_id, url):
+        """Open a dialog showing the AI-generated results with tabs for each artifact."""
+        win = tk.Toplevel(self.winfo_toplevel())
+        win.title(f"Ket qua AI - {page_id}")
+        win.geometry("800x700")
+
+        # Summary
+        if result.get("summary"):
+            summary_frame = ttk.LabelFrame(win, text=" Tom tat ", padding=5)
+            summary_frame.pack(fill="x", padx=10, pady=5)
+            ttk.Label(summary_frame, text=result["summary"], wraplength=750).pack(fill="x")
+
+        # Notebook with tabs
+        notebook = ttk.Notebook(win)
+        notebook.pack(fill="both", expand=True, padx=10, pady=5)
+
+        # Tab 1: Locators
+        loc_frame = ttk.Frame(notebook, padding=5)
+        notebook.add(loc_frame, text=" Locators ")
+        loc_text = tk.Text(loc_frame, font=("Consolas", 10))
+        loc_text.pack(fill="both", expand=True)
+        loc_text.insert("1.0", json.dumps(result.get("locators", {}), indent=4, ensure_ascii=False))
+
+        # Tab 2: Template
+        tpl_frame = ttk.Frame(notebook, padding=5)
+        notebook.add(tpl_frame, text=" Template ")
+        tpl_text = tk.Text(tpl_frame, font=("Consolas", 10))
+        tpl_text.pack(fill="both", expand=True)
+        tpl_text.insert("1.0", json.dumps(result.get("template", {}), indent=4, ensure_ascii=False))
+
+        # Tab 3: Test Data
+        td_frame = ttk.Frame(notebook, padding=5)
+        notebook.add(td_frame, text=" Du lieu test ")
+        td_text = tk.Text(td_frame, font=("Consolas", 10))
+        td_text.pack(fill="both", expand=True)
+        td_text.insert("1.0", json.dumps(result.get("test_data", []), indent=4, ensure_ascii=False))
+
+        # Tab 4: Setup Script
+        ss_frame = ttk.Frame(notebook, padding=5)
+        notebook.add(ss_frame, text=" Setup Script ")
+        ss_text = tk.Text(ss_frame, font=("Consolas", 10))
+        ss_text.pack(fill="both", expand=True)
+        setup_data = result.get("setup_script")
+        if setup_data:
+            ss_text.insert("1.0", json.dumps(setup_data, indent=4, ensure_ascii=False))
+        else:
+            ss_text.insert("1.0", "null\n\n(Khong can setup script cho use case nay)")
+
+        # Save buttons
+        btn_frame = ttk.Frame(win)
+        btn_frame.pack(fill="x", padx=10, pady=10)
+
+        def save_all():
+            self._save_ai_artifacts(loc_text, tpl_text, td_text, ss_text, page_id, url, win)
+
+        ttk.Button(btn_frame, text="LUU TAT CA", command=save_all).pack(side="right", padx=5)
+        ttk.Button(btn_frame, text="Dong", command=win.destroy).pack(side="right", padx=5)
+
+        # Individual save buttons for each tab
+        loc_btn = ttk.Frame(loc_frame)
+        loc_btn.pack(fill="x", pady=5)
+        ttk.Button(loc_btn, text="Luu Locators", command=lambda: self._save_single_artifact(
+            "locators", loc_text, page_id, url
+        )).pack(side="right")
+
+        tpl_btn = ttk.Frame(tpl_frame)
+        tpl_btn.pack(fill="x", pady=5)
+        ttk.Button(tpl_btn, text="Luu Template", command=lambda: self._save_single_artifact(
+            "template", tpl_text, page_id, url
+        )).pack(side="right")
+
+        td_btn = ttk.Frame(td_frame)
+        td_btn.pack(fill="x", pady=5)
+        ttk.Button(td_btn, text="Luu Test Data", command=lambda: self._save_single_artifact(
+            "test_data", td_text, page_id, url
+        )).pack(side="right")
+
+        ss_btn = ttk.Frame(ss_frame)
+        ss_btn.pack(fill="x", pady=5)
+        ttk.Button(ss_btn, text="Luu Setup Script", command=lambda: self._save_single_artifact(
+            "setup_script", ss_text, page_id, url
+        )).pack(side="right")
+
+    def _save_single_artifact(self, artifact_type, text_widget, page_id, url):
+        """Save a single AI-generated artifact."""
+        proj_path = self.shared["project_path"].get()
+        content = text_widget.get("1.0", tk.END).strip()
+
+        try:
+            if artifact_type == "locators":
+                data = json.loads(content)
+                self.logic.save_locator_json(proj_path, url, page_id, data)
+                messagebox.showinfo("Thanh cong", f"Da luu locators cho {page_id}!")
+
+            elif artifact_type == "template":
+                data = json.loads(content)
+                self.logic.save_template_json(proj_path, url, page_id, data)
+                messagebox.showinfo("Thanh cong", f"Da luu template cho {page_id}!")
+
+            elif artifact_type == "test_data":
+                data = json.loads(content)
+                if isinstance(data, list) and data:
+                    headers = list(data[0].keys())
+                    filepath = self.logic.save_test_data_from_rows(
+                        proj_path, url, page_id, data, headers
+                    )
+                    messagebox.showinfo("Thanh cong", f"Da luu test data: {filepath}")
+                else:
+                    messagebox.showwarning("Chu y", "Khong co du lieu test de luu.")
+
+            elif artifact_type == "setup_script":
+                if content.strip() == "null" or not content.strip():
+                    messagebox.showinfo("Thong bao", "Khong co setup script de luu.")
+                    return
+                data = json.loads(content)
+                script_name = f"{page_id}_setup.json"
+                filepath = self.logic.save_setup_script(proj_path, script_name, data)
+                messagebox.showinfo("Thanh cong", f"Da luu setup script: {filepath}")
+                self._refresh_setup_scripts()
+
+        except json.JSONDecodeError as e:
+            messagebox.showerror("Loi JSON", f"Dinh dang JSON khong hop le: {e}")
+        except Exception as e:
+            messagebox.showerror("Loi", str(e))
+
+    def _save_ai_artifacts(self, loc_text, tpl_text, td_text, ss_text, page_id, url, win):
+        """Save all AI-generated artifacts at once."""
+        saved = []
+        errors = []
+
+        for name, text_widget, artifact_type in [
+            ("Locators", loc_text, "locators"),
+            ("Template", tpl_text, "template"),
+            ("Test Data", td_text, "test_data"),
+            ("Setup Script", ss_text, "setup_script"),
+        ]:
+            try:
+                self._save_single_artifact(artifact_type, text_widget, page_id, url)
+                saved.append(name)
+            except Exception as e:
+                errors.append(f"{name}: {e}")
+
+        if errors:
+            messagebox.showwarning(
+                "Ket qua luu",
+                f"Da luu: {', '.join(saved)}\nLoi: {'; '.join(errors)}"
+            )
+        else:
+            self._append_log(f"[AI] Da luu tat ca artifacts cho {page_id}.")
 
     # ------------------------------------------------------------------
     # Project browsing

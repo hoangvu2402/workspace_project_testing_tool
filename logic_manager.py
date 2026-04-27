@@ -8,10 +8,12 @@ from pathlib import Path
 from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
 from core.setup_runner import SetupRunner
+from core.ai_generator import AIGenerator
 
 class AutomationLogic:
     def __init__(self):
         self.base_dir = Path(__file__).resolve().parent
+        self.ai = AIGenerator()
 
     def get_site_folder_name(self, url):
         """Trích xuất tên thư mục từ domain của URL"""
@@ -322,3 +324,56 @@ class AutomationLogic:
     def get_pytest_command(self, test_file):
         """Tạo lệnh chạy pytest"""
         return [sys.executable, "-m", "pytest", test_file, "-v", "-s", "--tb=no"]
+
+    # --- AI Generation --- #
+
+    def configure_ai(self, api_key):
+        """Set the Gemini API key."""
+        self.ai.configure(api_key)
+
+    def ai_generate(self, use_case_text, locators, template, page_id, url):
+        """Call Gemini AI to generate test artifacts from use case + scanned data."""
+        return self.ai.generate(use_case_text, locators, template, page_id, url)
+
+    def save_test_data_from_rows(self, project_path, target_url, page_id, rows, headers):
+        """Save test data rows as an Excel file.
+
+        Args:
+            project_path: Root project dir.
+            target_url: Target URL (for site folder).
+            page_id: Page identifier.
+            rows: List of dicts, each dict is a row of test data.
+            headers: List of column names.
+        """
+        import openpyxl
+        p_path = Path(project_path)
+        site_folder = self.get_site_folder_name(target_url)
+        dest_dir = p_path / "test_data" / site_folder
+        dest_dir.mkdir(parents=True, exist_ok=True)
+
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = f"{page_id}_data"
+
+        # Write headers
+        for col, header in enumerate(headers, 1):
+            ws.cell(row=1, column=col, value=header)
+
+        # Write data rows
+        for row_idx, row_data in enumerate(rows, 2):
+            for col_idx, header in enumerate(headers, 1):
+                ws.cell(row=row_idx, column=col_idx, value=row_data.get(header, ""))
+
+        filename = f"{page_id}_ai_data.xlsx"
+        filepath = dest_dir / filename
+        wb.save(filepath)
+        return str(filepath)
+
+    def save_setup_script(self, project_path, script_name, data):
+        """Save a setup script JSON file."""
+        p_path = Path(project_path) / "scripts" / "setup"
+        p_path.mkdir(parents=True, exist_ok=True)
+        filepath = p_path / script_name
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+        return str(filepath)
