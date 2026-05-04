@@ -665,6 +665,7 @@ class LocatorPanel(ttk.Frame):
         template = {"page_id": page_id, "url": url, "steps": steps}
 
         # Configure AI and call
+        proj_path = self.shared["project_path"].get()
         self.logic.configure_ai(api_key)
         self.ai_generate_btn.config(state="disabled")
         self.ai_status_label.config(text="Dang xu ly... (tu dong thu lai neu bi rate limit)")
@@ -672,7 +673,7 @@ class LocatorPanel(ttk.Frame):
 
         def run_ai():
             try:
-                result = self.logic.ai_generate(use_case, locators, template, page_id, url)
+                result = self.logic.ai_generate(use_case, locators, template, page_id, url, proj_path)
                 self.after(0, lambda r=result: self._show_ai_results(r, page_id, url))
                 self.after(0, lambda: self._append_log(f"[AI] Hoan thanh! {result.get('summary', '')}"))
                 self.after(0, lambda: self.ai_status_label.config(text="Hoan thanh!"))

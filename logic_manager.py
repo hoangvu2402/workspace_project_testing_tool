@@ -331,9 +331,9 @@ class AutomationLogic:
         """Set the Gemini API key."""
         self.ai.configure(api_key)
 
-    def ai_generate(self, use_case_text, locators, template, page_id, url):
+    def ai_generate(self, use_case_text, locators, template, page_id, url, project_path=""):
         """Call Gemini AI to generate test artifacts from use case + scanned data."""
-        return self.ai.generate(use_case_text, locators, template, page_id, url)
+        return self.ai.generate(use_case_text, locators, template, page_id, url, project_path)
 
     def save_test_data_from_rows(self, project_path, target_url, page_id, rows, headers):
         """Save test data rows as an Excel file.
