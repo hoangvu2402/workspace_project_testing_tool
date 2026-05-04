@@ -21,9 +21,9 @@ class AIGenerator:
     """Generates test artifacts using Google Gemini AI."""
 
     FALLBACK_MODELS = [
-        "gemini-2.0-flash",
-        "gemini-2.0-flash-lite",
-        "gemini-1.5-flash",
+        "gemini-2.5-flash",
+        "gemini-3-flash",
+        "gemini-3.1-flash-lite",
     ]
     MAX_RETRIES = 3
     DEFAULT_RETRY_DELAY = 20
@@ -76,6 +76,11 @@ class AIGenerator:
             except Exception as e:
                 err_str = str(e)
                 is_rate_limit = "429" in err_str or "RESOURCE_EXHAUSTED" in err_str
+                is_not_found = "404" in err_str or "NOT_FOUND" in err_str
+
+                if is_not_found:
+                    log.warning(f"Model {model_name}: khong ton tai hoac khong ho tro. Chuyen sang model khac...")
+                    return None
 
                 if not is_rate_limit:
                     raise
@@ -115,7 +120,11 @@ class AIGenerator:
 
         if not raw_text:
             raise RuntimeError(
-                "Tat ca cac model Gemini deu het quota.\n\n"
+                "Tat ca cac model Gemini deu khong kha dung "
+                f"({', '.join(self.FALLBACK_MODELS)}).\n\n"
+                "Nguyen nhan co the:\n"
+                "- Het quota (free tier gioi han so luong request/ngay)\n"
+                "- Model khong ton tai voi API version hien tai\n\n"
                 "Giai phap:\n"
                 "1. Doi 1-2 phut roi thu lai (quota per-minute se reset)\n"
                 "2. Doi den ngay mai (quota mien phi reset moi ngay)\n"
