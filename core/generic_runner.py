@@ -2,6 +2,8 @@ from pages.base_page import BasePage
 from utils.logger import log
 from utils.helpers import Helpers
 from config.config import Config
+from core.screenshot_manager import ScreenshotManager
+from core.performance_monitor import PerformanceMonitor
 from pathlib import Path
 
 
@@ -11,6 +13,10 @@ class GenericRunner:
         self.site_name = site_name
         self.page_id = page_id
         self.base_page = BasePage(page)
+        self.screenshot_mgr = ScreenshotManager(str(Config.REPORTS_DIR))
+        self.perf_monitor = PerformanceMonitor()
+        self.auto_heal = None  # set externally if AI key available
+        self.step_results = []  # track per-step results
 
         base_dir = Config.BASE_DIR
 
@@ -23,12 +29,15 @@ class GenericRunner:
             log.error(f"Khong the bat dau test: Thieu file cau hinh JSON cho {self.page_id}")
             return False
 
+        self.step_results = []
+
         try:
             log.info(f"Bat dau kich ban: {self.page_id} cho site {self.site_name}")
 
             target_url = self.workflow.get("url")
             if target_url:
                 self.base_page.navigate(target_url)
+                self.perf_monitor.measure_page_load(self.page, target_url)
 
             steps = self.workflow.get("steps", [])
             for step in steps:
@@ -39,6 +48,9 @@ class GenericRunner:
 
         except Exception as e:
             log.error(f"Kich ban dung dot ngot do loi: {str(e)}")
+            self.screenshot_mgr.capture_on_failure(
+                self.page, "final", self.page_id, str(e)
+            )
             raise e
 
     def _execute_step(self, step: dict, test_data: dict):
@@ -58,6 +70,51 @@ class GenericRunner:
             log.warning(f"Bo qua buoc '{step_id}': Khong tim thay Selector.")
             return
 
+        self.perf_monitor.start_step(step_id, action)
+
+        try:
+            self._dispatch_action(action, selector, value, step_name, step_id, data_key, test_data)
+            self.perf_monitor.end_step(step_id, success=True)
+            self.step_results.append({
+                "step_id": step_id, "action": action, "status": "passed", "error": ""
+            })
+        except Exception as e:
+            self.perf_monitor.end_step(step_id, success=False)
+
+            # Capture screenshot on failure
+            screenshot = self.screenshot_mgr.capture_on_failure(
+                self.page, step_id, self.page_id, str(e)
+            )
+
+            # Try auto-heal if available
+            if self.auto_heal and "Khong tim thay" in str(e) or "Timeout" in str(e):
+                heal_result = self.auto_heal.try_heal(
+                    self.page, step_id, selector, selector_info
+                )
+                if heal_result["healed"]:
+                    log.info(f"[AutoHeal] Thu lai voi selector moi: {heal_result['new_selector']}")
+                    try:
+                        self._dispatch_action(
+                            action, heal_result["new_selector"], value,
+                            step_name, step_id, data_key, test_data
+                        )
+                        self.step_results.append({
+                            "step_id": step_id, "action": action,
+                            "status": "healed", "error": "",
+                            "new_selector": heal_result["new_selector"],
+                        })
+                        return
+                    except Exception:
+                        pass
+
+            self.step_results.append({
+                "step_id": step_id, "action": action, "status": "failed",
+                "error": str(e), "screenshot": screenshot,
+            })
+            raise
+
+    def _dispatch_action(self, action, selector, value, step_name, step_id, data_key, test_data):
+        """Dispatch to the appropriate action handler."""
         if action == "click":
             self.base_page.click(selector, step_name)
 
@@ -122,4 +179,3 @@ class GenericRunner:
 
         elif action == "navigate":
             self.base_page.navigate(value)
-

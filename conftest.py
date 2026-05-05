@@ -18,10 +18,12 @@ def playwright_instance():
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
     """Khởi tạo trình duyệt dựa trên cấu hình trong Config."""
-    browser_type = getattr(playwright_instance, Config.get_base_browser())
-    log.info(f"Khởi động trình duyệt: {Config.get_base_browser()}")
+    browser_name = Config.get_base_browser()
+    browser_type = getattr(playwright_instance, browser_name)
+    headless = Config.get_headless()
+    log.info(f"Khởi động trình duyệt: {browser_name} (headless={headless})")
     
-    browser = browser_type.launch(headless=Config.get_headless())
+    browser = browser_type.launch(headless=headless)
     yield browser
     
     log.info("Đóng trình duyệt.")

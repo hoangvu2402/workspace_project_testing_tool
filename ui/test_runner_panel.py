@@ -5,9 +5,14 @@ import subprocess
 import sys
 import os
 import json
+import time
 import traceback
+import webbrowser
+from datetime import datetime
 from pathlib import Path
 from logic_manager import AutomationLogic
+from core.report_generator import ReportGenerator, TestResult
+from core.test_history import TestHistory, TestHistoryEntry
 
 
 class TestRunnerPanel(ttk.Frame):
@@ -50,6 +55,20 @@ class TestRunnerPanel(ttk.Frame):
         self.setup_combo = ttk.Combobox(cfg, width=35, state="readonly")
         self.setup_combo.grid(row=1, column=1, padx=5, sticky="w", columnspan=3)
         ttk.Button(cfg, text="Lam moi", command=self._refresh_setup_scripts).grid(row=1, column=4, padx=5)
+
+        # Row 2: parallel workers + report
+        ttk.Label(cfg, text="Parallel:").grid(row=2, column=0, sticky="w", pady=3)
+        self.parallel_var = tk.StringVar(value="1")
+        ttk.Combobox(cfg, textvariable=self.parallel_var, width=5,
+                     values=("1", "2", "3", "4")).grid(row=2, column=1, padx=5, sticky="w")
+
+        self.report_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(cfg, text="Tao bao cao HTML", variable=self.report_var).grid(
+            row=2, column=2, sticky="w", padx=10)
+
+        self.headless_var = tk.BooleanVar(value=False)
+        ttk.Checkbutton(cfg, text="Headless", variable=self.headless_var).grid(
+            row=2, column=3, sticky="w")
 
     def _build_add_to_queue_section(self):
         add_frame = ttk.LabelFrame(self, text=" 2. Chon Template & Du lieu ", padding=10)
@@ -322,6 +341,10 @@ class TestRunnerPanel(ttk.Frame):
         self._append_log(f"Bat dau chay {total} muc trong hang doi...\n")
 
         def run():
+            suite_start = datetime.now()
+            test_results = []
+            parallel = int(self.parallel_var.get()) if self.parallel_var.get().isdigit() else 1
+
             for i, item in enumerate(items, 1):
                 template = item["template"]
                 data = item["data"]
@@ -351,6 +374,10 @@ class TestRunnerPanel(ttk.Frame):
 
                 cmd = [python_exe, "-m", "pytest", test_file, "-v", "-s"]
 
+                # Parallel execution support
+                if parallel > 1:
+                    cmd.extend(["-n", str(parallel)])
+
                 env = os.environ.copy()
                 env["PYTHONPATH"] = proj_path
                 env["BASE_URL"] = url
@@ -358,6 +385,7 @@ class TestRunnerPanel(ttk.Frame):
                 env["SHEET_NAME"] = sheet
                 env["PAGE_ID"] = page_id
                 env["BROWSER"] = self.shared["browser_var"].get()
+                env["HEADLESS"] = "true" if self.headless_var.get() else "false"
                 env.update({"PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"})
 
                 # Pass setup script path to test process
@@ -368,7 +396,11 @@ class TestRunnerPanel(ttk.Frame):
                 if mode == "e2e":
                     env["E2E_WORKFLOW"] = workflow_path
 
+                tr = TestResult(template, page_id)
+                tr.start()
+
                 try:
+                    item_start = time.perf_counter()
                     process = subprocess.Popen(
                         cmd,
                         stdout=subprocess.PIPE,
@@ -385,6 +417,8 @@ class TestRunnerPanel(ttk.Frame):
 
                     rc = process.returncode
                     status = "THANH CONG" if rc == 0 else f"THAT BAI (code={rc})"
+                    tr.finish(rc == 0, error=f"Exit code: {rc}" if rc != 0 else "")
+
                     self.after(
                         0,
                         lambda s=status, t=template: self._append_log(
@@ -393,10 +427,48 @@ class TestRunnerPanel(ttk.Frame):
                     )
                 except Exception:
                     err = traceback.format_exc()
+                    tr.finish(False, error=err)
                     self.after(
                         0,
                         lambda m=err: self._append_log(f"\nLoi he thong:\n{m}\n"),
                     )
+
+                test_results.append(tr)
+
+            suite_end = datetime.now()
+
+            # Generate HTML report if enabled
+            if self.report_var.get() and test_results:
+                try:
+                    proj_path = self.shared["project_path"].get()
+                    report_gen = ReportGenerator(str(Path(proj_path) / "reports"))
+                    report_path = report_gen.generate_html(
+                        test_results, "Execution Queue", suite_start, suite_end
+                    )
+                    self.after(0, lambda p=report_path: self._append_log(
+                        f"\nBao cao HTML: {p}\n"
+                    ))
+                    self.after(0, lambda p=report_path: webbrowser.open(p))
+                except Exception as e:
+                    self.after(0, lambda e=e: self._append_log(f"\nLoi tao bao cao: {e}\n"))
+
+            # Record to history
+            try:
+                proj_path = self.shared["project_path"].get()
+                history = TestHistory(proj_path)
+                history.load()
+                entry = TestHistoryEntry(
+                    suite_name="Queue Execution",
+                    total=len(test_results),
+                    passed=sum(1 for r in test_results if r.status == "passed"),
+                    failed=sum(1 for r in test_results if r.status == "failed"),
+                    duration_ms=int((suite_end - suite_start).total_seconds() * 1000),
+                    details=[{"name": r.test_name, "status": r.status, "duration_ms": r.duration_ms}
+                             for r in test_results],
+                )
+                history.add_entry(entry)
+            except Exception:
+                pass
 
             self.after(
                 0,
