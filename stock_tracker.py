@@ -2,12 +2,15 @@
 Stock Tracker App - Theo doi co phieu tu FireAnt.vn
 Su dung Ichimoku Kinko Hyo de du doan xu huong co phieu.
 Quet du lieu dinh ky moi 1 phut.
+Tich hop scanner toan san de tim top 100 co phieu tiem nang.
 """
 import tkinter as tk
 from tkinter import ttk, messagebox
 import threading
 import requests
 from datetime import datetime, timedelta
+
+from stock_scanner import scan_all_stocks, get_top_stocks
 
 
 # ============================================================
@@ -225,8 +228,8 @@ class StockTrackerApp:
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Stock Tracker - FireAnt.vn | Ichimoku Kinko Hyo")
-        self.root.geometry("1100x850")
-        self.root.minsize(950, 720)
+        self.root.geometry("1200x900")
+        self.root.minsize(1000, 750)
 
         self._tracking_symbol = None
         self._scan_job = None
@@ -234,6 +237,9 @@ class StockTrackerApp:
         self._alert_lower = None
         self._alerted_upper = False
         self._alerted_lower = False
+
+        self._scan_results = []
+        self._scanner_running = False
 
         style = ttk.Style()
         style.theme_use("clam")
@@ -314,6 +320,10 @@ class StockTrackerApp:
         notebook.add(tab_ichimoku, text="  Ichimoku Kinko Hyo  ")
         self._build_ichimoku_tab(tab_ichimoku)
 
+        tab_scanner = ttk.Frame(notebook, padding=8)
+        notebook.add(tab_scanner, text="  Top 100 Co Phieu  ")
+        self._build_scanner_tab(tab_scanner)
+
         # --- Log ---
         log_frame = ttk.LabelFrame(self.root, text="Nhat ky", padding=4)
         log_frame.pack(fill=tk.X, padx=8, pady=(0, 6))
@@ -367,6 +377,80 @@ class StockTrackerApp:
 
         self.lbl_total_val = ttk.Label(summary_frame, text="Tong GT: --", font=("Arial", 10))
         self.lbl_total_val.pack(side=tk.LEFT, padx=20)
+
+    def _build_scanner_tab(self, parent):
+        """Tab quet toan san va hien thi top 100."""
+        # Controls
+        ctrl = ttk.Frame(parent)
+        ctrl.pack(fill=tk.X, pady=(0, 6))
+
+        self.btn_scan_all = ttk.Button(ctrl, text="Quet toan bo san", command=self._on_scan_all)
+        self.btn_scan_all.pack(side=tk.LEFT)
+
+        ttk.Label(ctrl, text="  Sap xep theo:").pack(side=tk.LEFT, padx=(12, 4))
+        self.combo_sort = ttk.Combobox(
+            ctrl,
+            values=["Diem tong hop", "Tang 3 thang", "Tang 6 thang", "Tang 12 thang"],
+            state="readonly",
+            width=16,
+        )
+        self.combo_sort.current(0)
+        self.combo_sort.pack(side=tk.LEFT)
+        self.combo_sort.bind("<<ComboboxSelected>>", lambda e: self._refresh_scanner_table())
+
+        self.lbl_scan_progress = ttk.Label(ctrl, text="", foreground="gray", font=("Arial", 9))
+        self.lbl_scan_progress.pack(side=tk.LEFT, padx=12)
+
+        self.progress_bar = ttk.Progressbar(ctrl, mode="determinate", length=200)
+        self.progress_bar.pack(side=tk.LEFT, padx=4)
+
+        # Results table
+        cols = [
+            ("#", 35),
+            ("Ma", 55),
+            ("Gia (x1000)", 80),
+            ("Diem", 50),
+            ("RSI", 45),
+            ("MACD", 50),
+            ("Bollinger", 65),
+            ("MA Trend", 65),
+            ("Vol", 45),
+            ("Ichimoku", 60),
+            ("ROC%", 50),
+            ("Gia 3T", 70),
+            ("%3T", 50),
+            ("Gia 6T", 70),
+            ("%6T", 50),
+            ("Gia 12T", 70),
+            ("%12T", 55),
+        ]
+        tree_frame = ttk.Frame(parent)
+        tree_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.tree_scanner = ttk.Treeview(
+            tree_frame,
+            columns=[c[0] for c in cols],
+            show="headings",
+            height=22,
+        )
+        for name, w in cols:
+            anchor = tk.W if name == "Ma" else tk.E
+            self.tree_scanner.heading(name, text=name)
+            self.tree_scanner.column(name, width=w, anchor=anchor, minwidth=w)
+
+        vsb = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=self.tree_scanner.yview)
+        self.tree_scanner.configure(yscrollcommand=vsb.set)
+        self.tree_scanner.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        vsb.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Legend
+        legend = ttk.Label(
+            parent,
+            text="Diem: 0-100 (cang cao cang tot) | RSI<30: Qua ban | MACD: MUA/BAN | MA Trend: Golden/Death Cross | Gia x1000 VND",
+            font=("Arial", 8),
+            foreground="gray",
+        )
+        legend.pack(fill=tk.X, pady=(4, 0))
 
     def _build_ichimoku_tab(self, parent):
         vals_frame = ttk.LabelFrame(parent, text="Cac duong Ichimoku (gia tri x1000 VND)", padding=8)
@@ -574,6 +658,78 @@ class StockTrackerApp:
         self._check_alerts(price_current)
 
         self._log(f"OK: {symbol} = {fmt_price(price_current)}")
+
+    # --- Scanner logic ---
+
+    def _on_scan_all(self):
+        if self._scanner_running:
+            messagebox.showinfo("Thong bao", "Dang quet, vui long doi...")
+            return
+        self._scanner_running = True
+        self.btn_scan_all.config(state=tk.DISABLED)
+        self.progress_bar["value"] = 0
+        self.lbl_scan_progress.config(text="Dang quet...", foreground="blue")
+        self._log("Bat dau quet toan bo co phieu tren san...")
+
+        def worker():
+            def on_progress(current, total, sym):
+                pct = int(current / total * 100) if total else 0
+                self.root.after(0, lambda: self._update_scan_progress(current, total, sym, pct))
+
+            results = scan_all_stocks(progress_callback=on_progress)
+            self.root.after(0, lambda: self._on_scan_complete(results))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _update_scan_progress(self, current, total, sym, pct):
+        self.progress_bar["value"] = pct
+        self.lbl_scan_progress.config(text=f"{current}/{total} ({pct}%) - {sym}")
+
+    def _on_scan_complete(self, results):
+        self._scan_results = results
+        self._scanner_running = False
+        self.btn_scan_all.config(state=tk.NORMAL)
+        self.progress_bar["value"] = 100
+        self.lbl_scan_progress.config(
+            text=f"Hoan thanh! {len(results)} co phieu duoc phan tich.",
+            foreground="green",
+        )
+        self._log(f"Quet xong: {len(results)} co phieu. Hien thi top 100.")
+        self._refresh_scanner_table()
+
+    def _refresh_scanner_table(self):
+        if not self._scan_results:
+            return
+        sort_map = {
+            "Diem tong hop": "score",
+            "Tang 3 thang": "upside_3m",
+            "Tang 6 thang": "upside_6m",
+            "Tang 12 thang": "upside_12m",
+        }
+        sort_key = sort_map.get(self.combo_sort.get(), "score")
+        top = get_top_stocks(list(self._scan_results), top_n=100, sort_by=sort_key)
+
+        self.tree_scanner.delete(*self.tree_scanner.get_children())
+        for i, r in enumerate(top, 1):
+            self.tree_scanner.insert("", tk.END, values=(
+                i,
+                r["symbol"],
+                fmt_price(r["current_price"]),
+                f"{r['score']:.0f}",
+                f"{r['rsi']:.0f}" if r.get("rsi") else "--",
+                r.get("macd_signal", "--"),
+                r.get("bollinger", "--"),
+                r.get("ma_trend", "--"),
+                r.get("volume_signal", "--"),
+                f"{r.get('ichimoku_score', 0):+d}",
+                f"{r['roc']:+.1f}" if r.get("roc") is not None else "--",
+                fmt_price(r["price_3m"]),
+                f"{r['upside_3m']:+.1f}%",
+                fmt_price(r["price_6m"]),
+                f"{r['upside_6m']:+.1f}%",
+                fmt_price(r["price_12m"]),
+                f"{r['upside_12m']:+.1f}%",
+            ))
 
     def _check_alerts(self, price_raw):
         price_k = price_raw / 1000  # x1000 VND
