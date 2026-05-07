@@ -7,10 +7,24 @@ import shutil
 from pathlib import Path
 from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
+from core.setup_runner import SetupRunner
+from core.ai_generator import AIGenerator
 
 class AutomationLogic:
     def __init__(self):
         self.base_dir = Path(__file__).resolve().parent
+        self.ai = AIGenerator()
+        self._vector_db = None
+        self._ai_config = None
+
+    def set_ai_components(self, vector_db=None, ai_config=None):
+        """Truyen VectorDB va AIConfig vao logic manager."""
+        if vector_db is not None:
+            self._vector_db = vector_db
+        if ai_config is not None:
+            self._ai_config = ai_config
+        self.ai.vector_db = self._vector_db
+        self.ai.ai_config = self._ai_config
 
     def get_site_folder_name(self, url):
         """Trích xuất tên thư mục từ domain của URL"""
@@ -18,8 +32,18 @@ class AutomationLogic:
         domain = parsed_url.netloc.replace('.', '_') if parsed_url.netloc else "unknown_site"
         return re.sub(r'[\\/*?:"<>|]', "", domain)
 
-    def scan_url(self, url, browser_name="chromium"):
-        """Thực hiện quét trang web bằng Playwright và trả về danh sách phần tử bao gồm cả các thẻ rỗng"""
+    def get_setup_scripts(self, project_path):
+        """List available setup scripts in scripts/setup/."""
+        return SetupRunner.list_scripts(project_path)
+
+    def scan_url(self, url, browser_name="chromium", setup_script=""):
+        """Thực hiện quét trang web bằng Playwright và trả về danh sách phần tử bao gồm cả các thẻ rỗng
+
+        Args:
+            url: Target URL to scan.
+            browser_name: Browser to use (chromium/firefox/webkit).
+            setup_script: Optional absolute path to a setup script to run before scanning.
+        """
         if not url:
             raise ValueError("URL không được để trống")
 
@@ -27,6 +51,11 @@ class AutomationLogic:
             browser_type = getattr(p, browser_name, p.chromium)
             browser = browser_type.launch(headless=True)
             page = browser.new_page()
+
+            # Run setup script if provided (e.g. login, dismiss banners)
+            if setup_script:
+                SetupRunner.run(page, setup_script)
+
             page.goto(url, timeout=60000)
             
             # Trong file logic_manager.txt, thay đổi đoạn evaluate trong scan_url:
@@ -297,6 +326,65 @@ class AutomationLogic:
             json.dump(data, f, indent=4, ensure_ascii=False)
         return str(filepath)
 
+    def get_setup_script_path(self, project_path, script_name):
+        """Return absolute path for a setup script by name."""
+        if not script_name:
+            return ""
+        return str(Path(project_path) / "scripts" / "setup" / script_name)
+
     def get_pytest_command(self, test_file):
         """Tạo lệnh chạy pytest"""
         return [sys.executable, "-m", "pytest", test_file, "-v", "-s", "--tb=no"]
+
+    # --- AI Generation --- #
+
+    def configure_ai(self, api_key):
+        """Set the Gemini API key."""
+        self.ai.configure(api_key)
+
+    def ai_generate(self, use_case_text, locators, template, page_id, url, project_path=""):
+        """Call Gemini AI to generate test artifacts from use case + scanned data."""
+        return self.ai.generate(use_case_text, locators, template, page_id, url, project_path)
+
+    def save_test_data_from_rows(self, project_path, target_url, page_id, rows, headers):
+        """Save test data rows as an Excel file.
+
+        Args:
+            project_path: Root project dir.
+            target_url: Target URL (for site folder).
+            page_id: Page identifier.
+            rows: List of dicts, each dict is a row of test data.
+            headers: List of column names.
+        """
+        import openpyxl
+        p_path = Path(project_path)
+        site_folder = self.get_site_folder_name(target_url)
+        dest_dir = p_path / "test_data" / site_folder
+        dest_dir.mkdir(parents=True, exist_ok=True)
+
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = f"{page_id}_data"
+
+        # Write headers
+        for col, header in enumerate(headers, 1):
+            ws.cell(row=1, column=col, value=header)
+
+        # Write data rows
+        for row_idx, row_data in enumerate(rows, 2):
+            for col_idx, header in enumerate(headers, 1):
+                ws.cell(row=row_idx, column=col_idx, value=row_data.get(header, ""))
+
+        filename = f"{page_id}_ai_data.xlsx"
+        filepath = dest_dir / filename
+        wb.save(filepath)
+        return str(filepath)
+
+    def save_setup_script(self, project_path, script_name, data):
+        """Save a setup script JSON file."""
+        p_path = Path(project_path) / "scripts" / "setup"
+        p_path.mkdir(parents=True, exist_ok=True)
+        filepath = p_path / script_name
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+        return str(filepath)
