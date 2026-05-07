@@ -14,6 +14,17 @@ class AutomationLogic:
     def __init__(self):
         self.base_dir = Path(__file__).resolve().parent
         self.ai = AIGenerator()
+        self._vector_db = None
+        self._ai_config = None
+
+    def set_ai_components(self, vector_db=None, ai_config=None):
+        """Truyen VectorDB va AIConfig vao logic manager."""
+        if vector_db is not None:
+            self._vector_db = vector_db
+        if ai_config is not None:
+            self._ai_config = ai_config
+        self.ai.vector_db = self._vector_db
+        self.ai.ai_config = self._ai_config
 
     def get_site_folder_name(self, url):
         """Trích xuất tên thư mục từ domain của URL"""

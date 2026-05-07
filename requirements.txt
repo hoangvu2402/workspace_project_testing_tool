@@ -16,3 +16,7 @@ pytest-xdist==3.5.0
 google-genai>=1.0.0
 
 Pillow>=10.0.0
+
+# Vector Database & Semantic Search
+chromadb>=0.4.0
+sentence-transformers>=2.2.0

@@ -13,7 +13,10 @@ except ImportError:
 
 
 class AITestSuggestion:
-    """Suggests which test cases need to be re-run based on code changes."""
+    """Suggests which test cases need to be re-run based on code changes.
+
+    Tich hop AIConfig de tuy chinh prompt va model.
+    """
 
     FALLBACK_MODELS = [
         "gemini-2.5-flash",
@@ -21,13 +24,16 @@ class AITestSuggestion:
         "gemini-3.1-flash-lite",
     ]
 
-    def __init__(self, api_key: str = ""):
+    def __init__(self, api_key: str = "", ai_config=None):
         self.api_key = api_key
         self._client = None
+        self.ai_config = ai_config  # AIConfig instance (optional)
 
-    def configure(self, api_key: str):
+    def configure(self, api_key: str, ai_config=None):
         self.api_key = api_key
         self._client = None
+        if ai_config is not None:
+            self.ai_config = ai_config
 
     def _get_client(self):
         if not genai:
@@ -181,7 +187,16 @@ class AITestSuggestion:
                     for f in site_dir.glob("*.json"):
                         locator_files.append(str(f.relative_to(p)))
 
-        prompt = f"""Phan tich thay doi code va de xuat test case can chay lai.
+        # Custom test suggestion prompt
+        custom_ts_prompt = ""
+        if self.ai_config:
+            custom_ts_prompt = self.ai_config.get_prompt("test_suggestion")
+
+        ts_instruction = custom_ts_prompt or (
+            "Phan tich thay doi code va de xuat test case can chay lai."
+        )
+
+        prompt = f"""{ts_instruction}
 
 Code diff:
 {diff_text[:8000]}
@@ -209,7 +224,13 @@ Hay tra ve JSON:
 Chi tra ve JSON."""
 
         client = self._get_client()
-        for model in self.FALLBACK_MODELS:
+        models = self.FALLBACK_MODELS
+        if self.ai_config:
+            custom_models = self.ai_config.get_model_priority()
+            if custom_models:
+                models = custom_models
+
+        for model in models:
             try:
                 response = client.models.generate_content(model=model, contents=prompt)
                 text = response.text.strip()

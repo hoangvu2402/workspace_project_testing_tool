@@ -67,6 +67,12 @@ class AutomationGeneratorUI:
         self.ai_tools_panel = AIToolsPanel(notebook, self.logic, self.shared_vars)
         notebook.add(self.ai_tools_panel, text="  AI Tools  ")
 
+        # Connect AI components to logic manager
+        self.logic.set_ai_components(
+            vector_db=self.ai_tools_panel.get_vector_db(),
+            ai_config=self.ai_tools_panel.get_ai_config(),
+        )
+
         # When project path changes in locator panel, refresh test runner lists
         self.locator_panel.on_project_changed = self._on_project_changed
 

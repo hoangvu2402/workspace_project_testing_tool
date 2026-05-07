@@ -12,7 +12,10 @@ except ImportError:
 
 
 class AIAutoHeal:
-    """Uses AI to find replacement locators when element not found."""
+    """Uses AI to find replacement locators when element not found.
+
+    Tich hop AIConfig de tuy chinh prompt va model.
+    """
 
     FALLBACK_MODELS = [
         "gemini-2.5-flash",
@@ -20,14 +23,17 @@ class AIAutoHeal:
         "gemini-3.1-flash-lite",
     ]
 
-    def __init__(self, api_key: str = ""):
+    def __init__(self, api_key: str = "", ai_config=None):
         self.api_key = api_key
         self._client = None
         self.heal_log = []  # tracks all heal attempts
+        self.ai_config = ai_config  # AIConfig instance (optional)
 
-    def configure(self, api_key: str):
+    def configure(self, api_key: str, ai_config=None):
         self.api_key = api_key
         self._client = None
+        if ai_config is not None:
+            self.ai_config = ai_config
 
     def _get_client(self):
         if not genai:
@@ -141,8 +147,18 @@ class AIAutoHeal:
             except Exception:
                 page_source = ""
 
+        # Lay custom prompt tu ai_config neu co
+        custom_heal_prompt = ""
+        if self.ai_config:
+            custom_heal_prompt = self.ai_config.get_prompt("auto_heal")
+
+        heal_instruction = custom_heal_prompt or (
+            "Phan tich HTML va de xuat selector thay the. "
+            "Uu tien: data-testid > id > name > aria-label > css class."
+        )
+
         prompt = f"""Toi dang tu dong hoa test va locator bi loi (element not found).
-Hay phan tich HTML va de xuat selector thay the.
+{heal_instruction}
 
 Locator bi loi:
 - Step ID: {step_id}
@@ -163,7 +179,12 @@ Hay tra ve JSON:
 Chi tra ve JSON, khong giai thich them."""
 
         client = self._get_client()
-        for model in self.FALLBACK_MODELS:
+        models = self.FALLBACK_MODELS
+        if self.ai_config:
+            custom_models = self.ai_config.get_model_priority()
+            if custom_models:
+                models = custom_models
+        for model in models:
             try:
                 response = client.models.generate_content(model=model, contents=prompt)
                 text = response.text.strip()

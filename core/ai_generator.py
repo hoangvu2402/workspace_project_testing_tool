@@ -160,7 +160,12 @@ def gather_rag_context(project_path: str, url: str) -> str:
 # ---------------------------------------------------------------------------
 
 class AIGenerator:
-    """Generates test artifacts using Google Gemini AI with advanced techniques."""
+    """Generates test artifacts using Google Gemini AI with advanced techniques.
+
+    Tich hop:
+    - VectorDB & Semantic Search cho RAG context
+    - AIConfig cho prompt tuy chinh theo nguoi dung
+    """
 
     FALLBACK_MODELS = [
         "gemini-2.5-flash",
@@ -174,13 +179,19 @@ class AIGenerator:
     SMALL_PAGE_THRESHOLD = 15
     LARGE_PAGE_THRESHOLD = 40
 
-    def __init__(self, api_key: str = ""):
+    def __init__(self, api_key: str = "", vector_db=None, ai_config=None):
         self.api_key = api_key
         self._client = None
+        self.vector_db = vector_db    # VectorDB instance (optional)
+        self.ai_config = ai_config    # AIConfig instance (optional)
 
-    def configure(self, api_key: str):
+    def configure(self, api_key: str, vector_db=None, ai_config=None):
         self.api_key = api_key
         self._client = None
+        if vector_db is not None:
+            self.vector_db = vector_db
+        if ai_config is not None:
+            self.ai_config = ai_config
 
     def _get_client(self):
         if not genai:
@@ -248,7 +259,13 @@ class AIGenerator:
 
     def _call_with_fallback(self, client, prompt):
         """Try all fallback models and return (text, model_name) or raise."""
-        for model_name in self.FALLBACK_MODELS:
+        # Su dung model priority tu ai_config neu co
+        models = self.FALLBACK_MODELS
+        if self.ai_config:
+            custom_models = self.ai_config.get_model_priority()
+            if custom_models:
+                models = custom_models
+        for model_name in models:
             raw = self._call_model(client, model_name, prompt)
             if raw:
                 return raw, model_name
@@ -256,7 +273,7 @@ class AIGenerator:
 
         raise RuntimeError(
             "Tat ca cac model Gemini deu khong kha dung "
-            f"({', '.join(self.FALLBACK_MODELS)}).\n\n"
+            f"({', '.join(models)}).\n\n"
             "Nguyen nhan co the:\n"
             "- Het quota (free tier gioi han so luong request/ngay)\n"
             "- Model khong ton tai voi API version hien tai\n\n"
@@ -299,6 +316,14 @@ class AIGenerator:
         """
         client = self._get_client()
 
+        # --- Stage 0: Index use case vao Vector DB ---
+        if self.vector_db and self.vector_db.is_initialized:
+            import hashlib
+            uc_id = f"uc_{hashlib.md5(use_case_text[:200].encode()).hexdigest()[:12]}"
+            self.vector_db.add_use_case(uc_id, use_case_text, {
+                "page_id": page_id, "url": url,
+            })
+
         # --- Stage 1: Pre-AI Filtering ---
         original_count = len(locators)
         filtered_locators = filter_locators(locators)
@@ -309,10 +334,23 @@ class AIGenerator:
         log.info(f"[Pipeline] Use case chunks: main_flow={'co' if use_case_chunks['main_flow'] else 'khong'}, "
                  f"exception_flows={'co' if use_case_chunks['exception_flows'] else 'khong'}")
 
-        # --- Stage 3: RAG Context ---
-        rag_context = gather_rag_context(project_path, url)
-        if rag_context:
-            log.info("[Pipeline] Da thu thap RAG context tu du an.")
+        # --- Stage 3: RAG Context (Vector DB Semantic Search + keyword fallback) ---
+        rag_context = ""
+        use_vector_rag = (
+            self.vector_db
+            and self.vector_db.is_initialized
+            and (not self.ai_config or self.ai_config.is_feature_enabled("vector_db_enabled"))
+        )
+        if use_vector_rag:
+            rag_context = self.vector_db.build_rag_context(
+                query=use_case_text, url=url
+            )
+            if rag_context:
+                log.info("[Pipeline] RAG context tu Vector DB (Semantic Search).")
+        if not rag_context:
+            rag_context = gather_rag_context(project_path, url)
+            if rag_context:
+                log.info("[Pipeline] RAG context tu keyword-based fallback.")
 
         # --- Stage 4: Adaptive Strategy ---
         strategy = self._select_strategy(len(filtered_locators))
@@ -436,7 +474,27 @@ class AIGenerator:
         locators_json = json.dumps(locators, indent=2, ensure_ascii=False)
         template_json = json.dumps(template, indent=2, ensure_ascii=False)
 
-        return f"""Ban la chuyen gia test automation. Dua tren use case va cac locators/template da quet duoc tu trang web, hay tao ra cac file can thiet cho viec test tu dong.
+        # Lay system prompt va objectives tu ai_config neu co
+        system_intro = "Ban la chuyen gia test automation."
+        objectives_text = ""
+        custom_gen_prompt = ""
+        if self.ai_config:
+            custom_sys = self.ai_config.get_prompt("system_prompt")
+            if custom_sys:
+                system_intro = custom_sys
+            objectives_text = self.ai_config.get_objectives_text()
+            custom_gen_prompt = self.ai_config.get_prompt("generate_locators")
+
+        objectives_section = ""
+        if objectives_text:
+            objectives_section = f"\n=== {objectives_text} ===\n"
+
+        custom_section = ""
+        if custom_gen_prompt:
+            custom_section = f"\n=== HUONG DAN TUY CHINH ===\n{custom_gen_prompt}\n"
+
+        return f"""{system_intro} Dua tren use case va cac locators/template da quet duoc tu trang web, hay tao ra cac file can thiet cho viec test tu dong.
+{objectives_section}{custom_section}
 
 === THONG TIN ===
 URL: {url}

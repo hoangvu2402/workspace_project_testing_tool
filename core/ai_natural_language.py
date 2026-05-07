@@ -12,7 +12,10 @@ except ImportError:
 
 class AINaturalLanguage:
     """Converts natural language test descriptions (Vietnamese/English) into
-    automation templates, locators, and test data."""
+    automation templates, locators, and test data.
+
+    Tich hop AIConfig de tuy chinh prompt va model.
+    """
 
     FALLBACK_MODELS = [
         "gemini-2.5-flash",
@@ -20,13 +23,16 @@ class AINaturalLanguage:
         "gemini-3.1-flash-lite",
     ]
 
-    def __init__(self, api_key: str = ""):
+    def __init__(self, api_key: str = "", ai_config=None):
         self.api_key = api_key
         self._client = None
+        self.ai_config = ai_config  # AIConfig instance (optional)
 
-    def configure(self, api_key: str):
+    def configure(self, api_key: str, ai_config=None):
         self.api_key = api_key
         self._client = None
+        if ai_config is not None:
+            self.ai_config = ai_config
 
     def _get_client(self):
         if not genai:
@@ -61,7 +67,17 @@ Locators da co cho trang nay:
 Hay su dung cac locator co san khi phu hop. Chi tao locator moi khi can thiet.
 """
 
-        prompt = f"""Toi muon tao test tu dong tu mo ta bang ngon ngu tu nhien.
+        # Custom natural language prompt
+        custom_nl_prompt = ""
+        if self.ai_config:
+            custom_nl_prompt = self.ai_config.get_prompt("natural_language")
+
+        nl_instruction = custom_nl_prompt or (
+            "Chuyen doi mo ta test tu ngon ngu tu nhien thanh template automation."
+        )
+
+        prompt = f"""{nl_instruction}
+Toi muon tao test tu dong tu mo ta bang ngon ngu tu nhien.
 Hay chuyen doi mo ta sau thanh cac file test automation.
 
 Mo ta test:
@@ -109,7 +125,13 @@ Luu y:
 - Tao it nhat 3 bo du lieu test (happy path + negative cases)
 - Chi tra ve JSON, khong giai thich them."""
 
-        for model in self.FALLBACK_MODELS:
+        models = self.FALLBACK_MODELS
+        if self.ai_config:
+            custom_models = self.ai_config.get_model_priority()
+            if custom_models:
+                models = custom_models
+
+        for model in models:
             try:
                 response = client.models.generate_content(model=model, contents=prompt)
                 text = response.text.strip()
@@ -165,7 +187,12 @@ Luu y:
         """Suggest improvements for a natural language test description."""
         client = self._get_client()
 
-        prompt = f"""Phan tich mo ta test sau va de xuat cai thien:
+        custom_intro = ""
+        if self.ai_config:
+            custom_intro = self.ai_config.get_objectives_text()
+
+        prompt = f"""{custom_intro}
+Phan tich mo ta test sau va de xuat cai thien:
 
 {natural_text}
 
@@ -179,7 +206,13 @@ Hay tra ve JSON:
 
 Chi tra ve JSON."""
 
-        for model in self.FALLBACK_MODELS:
+        models = self.FALLBACK_MODELS
+        if self.ai_config:
+            custom_models = self.ai_config.get_model_priority()
+            if custom_models:
+                models = custom_models
+
+        for model in models:
             try:
                 response = client.models.generate_content(model=model, contents=prompt)
                 text = response.text.strip()
